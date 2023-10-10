@@ -1,333 +1,37 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.IMU;
-import com.qualcomm.robotcore.hardware.Servo;
 
-//import com.qualcomm.robotcore.hardware.DcMotorSimple;
-
-import org.checkerframework.checker.units.qual.A;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-
-@TeleOp(name = "Drive")
+@TeleOp (name = "Drive")
 public class Drive extends LinearOpMode {
-    @Override
-    public void runOpMode() throws InterruptedException {
+        public void runOpMode() throws InterruptedException {
+            DcMotor front_left = hardwareMap.dcMotor.get("front_left_motor");
+            DcMotor front_right = hardwareMap.dcMotor.get("front_right_motor");
+            DcMotor back_left = hardwareMap.dcMotor.get("back_left_motor");
+            DcMotor back_right = hardwareMap.dcMotor.get("back_right_motor");
 
-        boolean fieldCentric = false;
-        double powerFactor = 0.75;
-        boolean lowPowerMode = false;
-        boolean aButtonPress = false;
-        boolean button_2bPressed = false;
-        int lift_position = 0;
-        double ARM_POWER = 0.05;
-        // Get the motors
-        DcMotor bk_lt = hardwareMap.dcMotor.get("back_left_motor");
-        DcMotor ft_lt = hardwareMap.dcMotor.get("front_left_motor");
-        DcMotor ft_rt = hardwareMap.dcMotor.get("front_right_motor");
-        DcMotor bk_rt = hardwareMap.dcMotor.get("back_right_motor");
-        DcMotor arm_rt = hardwareMap.dcMotor.get("arm_rt");
-        DcMotor arm_lt = hardwareMap.dcMotor.get("arm_lt");
-        DcMotor hanging = hardwareMap.dcMotor.get("hanging");
-        //DcMotor rotator = hardwareMap.dcMotor.get("rotator");
-        Servo claw = hardwareMap.servo.get("claw");
-        //Servo arm_lift = hardwareMap.servo.get("arm_lift");
-        Servo rotator = hardwareMap.servo.get("rotator");
-        Servo drone = hardwareMap.servo.get("drone");
+            front_left.setDirection(DcMotorSimple.Direction.REVERSE);
+            back_left.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        // These may be robot dependant
-        bk_lt.setDirection(DcMotor.Direction.REVERSE);
-        ft_lt.setDirection(DcMotor.Direction.REVERSE);
+            waitForStart();
 
-        // The IMU will be used to capture the heading for field centric driving
-        IMU imu = hardwareMap.get(IMU.class, "imu");
+            while(opModeIsActive()){
+                double left_stick_y = -gamepad1.left_stick_y;
+                double left_stick_x = gamepad1.left_stick_x;
+                double triggers = gamepad1.left_trigger - gamepad1.right_trigger;
 
-        // Set this to match your robot
-        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                RevHubOrientationOnRobot.LogoFacingDirection.FORWARD,
-                RevHubOrientationOnRobot.UsbFacingDirection.UP));
+                front_left.setPower(left_stick_y + left_stick_x - triggers);
+                front_right.setPower(left_stick_y - left_stick_x + triggers);
+                back_left.setPower(left_stick_y - left_stick_x - triggers);
+                back_right.setPower(left_stick_y + left_stick_x + triggers);
 
-        // Without this, the REV Hub's orientation is assumed to be logo up / USB forward
-        imu.initialize(parameters);
-
-        /*
-        bk_lt.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        ft_lt.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        ft_rt.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        bk_rt.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-
-
-        bk_lt.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        ft_lt.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        ft_rt.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        bk_rt.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        */
-
-        arm_rt.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        arm_lt.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        hanging.setMode((DcMotor.RunMode.STOP_AND_RESET_ENCODER));
-
-        arm_rt.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        arm_lt.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        hanging.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-
-
-        arm_lt.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        arm_rt.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        hanging.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-
-        telemetry.addData("Press Start When Ready","");
-        telemetry.update();
-
-        waitForStart();
-        while (opModeIsActive()){
-            double left_stick_x = gamepad1.left_stick_x;
-            double left_stick_y = -gamepad1.left_stick_y;
-            double triggers = gamepad1.left_trigger - gamepad1.right_trigger;
-            boolean dpadDown2 = gamepad2.dpad_down;
-            boolean dpadUp2 = gamepad2.dpad_up;
-            boolean bumper_left = gamepad2.left_bumper;
-            boolean bumper_right = gamepad2.right_bumper;
-            boolean button_2x = gamepad2.x;
-            boolean button_1b = gamepad1.b;
-            boolean button_1x = gamepad1.x;
-            boolean button_2a = gamepad2.a;
-            boolean button_2y = gamepad2.y;
-            boolean button_2b = gamepad2.b;
-            boolean button_1y = gamepad1.y;
-
-
-
-
-
-           //open and close claw - working
-
-           if (button_2a == true && button_2y == false) {
-               claw.setPosition(0.8);
-               telemetry.addLine("opening claw");
-           }
-           else if (button_2y == true && button_2a == false){
-               claw.setPosition(0.9);
-               telemetry.addLine("closing claw");
-           }
-
-           //hanging
-
-           if (button_1b == true){
-               //hanging.setDirection(DcMotorSimple.Direction.REVERSE);
-               hanging.setPower(1);
-           }
-           else if (button_1x == true){
-               hanging.setPower(0);
-           }
-
-
-
-           /*if (button_2b && !button_2bPressed) {
-               button_2bPressed = true;
-               if (lift_position == 1) {
-                  arm_lift.setDirection(Servo.Direction.REVERSE);
-                  lift_position = 0;
-               }
-               else {
-                   arm_lift.setDirection(Servo.Direction.REVERSE);
-                   lift_position = 1;
-               }
-
-               arm_lift.setPosition(lift_position);
-           }
-           else if (!button_2b && button_2bPressed) {
-                button_2bPressed = false;
-            } */
-
-
-
-           //drone launcher
-
-           if (button_1y == true){
-               drone.setPosition(1);
-           }
-
-
-
-            //switch between field and robot centric - untested
-
-            /* if (button_1b == true) {
-                fieldCentric = true;
-            } else if (button_1x == true){
-                fieldCentric = false;
-            } */
-
-
-
-            //rotator with servo
-
-            if (bumper_left == true){
-                rotator.setPosition(0);
-            } else if (button_2x == true){
-                rotator.setPosition(0.22);
-            } else if (bumper_right == true){
-                rotator.setPosition(1);
-            }
-
-
-
-            //rotator with motor - working; too fast?
-
-           /* if (bumper_left == true){
-                rotator.setPower(0.25);
-            } else if (bumper_right == true){
-                rotator.setPower(-0.25);
-            } else if (bumper_left == false && bumper_right == false){
-                rotator.setPower(0);
-            } */
-
-
-
-            //move arm using encoders
-
-            if (dpadUp2){
-            arm_rt.setTargetPosition(140);
-            arm_lt.setTargetPosition(140);
-            arm_rt.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            arm_lt.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            arm_rt.setPower(ARM_POWER);
-            arm_lt.setPower(ARM_POWER);
-
-            /* while(arm_rt.isBusy() || arm_lt.isBusy()){
-                telemetry.addData("right motor is busy", arm_rt.isBusy());
-                telemetry.addData("left motor is busy", arm_lt.isBusy());
-                telemetry.addData("arm left position", arm_lt.getCurrentPosition());
-                telemetry.addData("arm right position", arm_rt.getCurrentPosition());
+                telemetry.addData("left_stick_y",left_stick_y);
+                telemetry.addData("left_stick_x",left_stick_x);
+                telemetry.addData("triggers",triggers);
                 telemetry.update();
             }
-
-            arm_rt.setPower(0);
-            arm_lt.setPower(0); */
-            }
-            else if (dpadDown2){
-            arm_rt.setTargetPosition(0);
-            arm_lt.setTargetPosition(0);
-            arm_rt.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            arm_lt.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            arm_rt.setPower(ARM_POWER);
-            arm_lt.setPower(ARM_POWER);
-
-             while(arm_rt.isBusy() || arm_lt.isBusy()){
-                telemetry.addData("right motor is busy", arm_rt.isBusy());
-                telemetry.addData("left motor is busy", arm_lt.isBusy());
-                telemetry.addData("arm left position", arm_lt.getCurrentPosition());
-                telemetry.addData("arm right position", arm_rt.getCurrentPosition());
-                telemetry.update();
-            }
-
-            arm_rt.setPower(0);
-            arm_lt.setPower(0);
-            }
-
-
-
-            //run arm w/o encoders - less control, no holding
-
-           /*  if (dpadUp2 == true){
-                arm_rt.setPower(0.9);
-                arm_lt.setPower(0.9);
-            } else if (dpadDown2 == true){
-                arm_rt.setPower(-0.9);
-                arm_lt.setPower(-0.96);
-            } else if (dpadDown2 == false && dpadUp2 == false) {
-                arm_rt.setPower(0);
-                arm_lt.setPower(0);
-            } */
-
-            if (Math.abs(triggers) < 0.05) triggers = 0;
-            double bk_lt_power = -left_stick_x + left_stick_y - triggers;
-            double ft_lt_power = left_stick_x + left_stick_y - triggers;
-            double ft_rt_power = -left_stick_x + left_stick_y + triggers;
-            double bk_rt_power = left_stick_x + left_stick_y + triggers;
-
-            // I have seen two ways to get this information. The latter looks less error prone
-            //double botHeading = imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle;
-            double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-
-            // Rotate the movement direction counter to the robot's rotation
-            if(fieldCentric) {
-
-                // This can be used if the robot become uncalibrated. Point the robot away from you and press start.
-                if (gamepad1.start) {
-                    imu.resetYaw();
-                }
-
-                double rotX = left_stick_x * Math.cos(-botHeading) - left_stick_y * Math.sin(-botHeading);
-                double rotY = left_stick_x * Math.sin(-botHeading) + left_stick_y * Math.cos(-botHeading);
-                bk_lt_power = -rotX + rotY - triggers;
-                ft_lt_power = rotX + rotY - triggers;
-                ft_rt_power = -rotX + rotY + triggers;
-                bk_rt_power = rotX + rotY + triggers;
-            }
-
-            // Normalize the power
-            double max = Math.max(1.0, Math.abs(bk_lt_power));
-            max = Math.max(max, Math.abs(ft_lt_power));
-            max = Math.max(max, Math.abs(ft_rt_power));
-            max = Math.max(max, Math.abs(bk_rt_power));
-            bk_lt_power /= max;
-            ft_lt_power /= max;
-            ft_rt_power /= max;
-            bk_rt_power /= max;
-
-            if (gamepad1.a && !aButtonPress) {
-                aButtonPress = true;
-                if (lowPowerMode){
-                    powerFactor = 1.0;
-                    lowPowerMode = false;
-                } else{
-                    powerFactor = 0.25;
-                    lowPowerMode = true;
-                }
-
-            } else if (!gamepad1.a && aButtonPress) {
-                aButtonPress = false;
-            }
-            bk_lt.setPower(bk_lt_power * powerFactor);
-            ft_lt.setPower(ft_lt_power * powerFactor);
-            ft_rt.setPower(ft_rt_power * powerFactor);
-            bk_rt.setPower(bk_rt_power * powerFactor);
-
-            telemetry.addData("Heading (degrees)", " %.1f", botHeading * 180.0 / Math.PI);
-            telemetry.addData("Left Stick X", left_stick_x);
-            telemetry.addData("Left Stick Y", left_stick_y);
-            telemetry.addData("Triggers", triggers);
-            telemetry.addData("dpadUp2", dpadUp2);
-            telemetry.addData("dpadDown2", dpadDown2);
-            telemetry.addData("2y", button_2y);
-            telemetry.addData("2a", button_2a);
-            telemetry.addData("2b", button_2b);
-            telemetry.addData("arm left position", arm_lt.getCurrentPosition());
-            telemetry.addData("arm right position", arm_rt.getCurrentPosition());
-            telemetry.addData("mode", arm_rt.getMode());
-            telemetry.addData("arm left target pos", arm_lt.getTargetPosition());
-            telemetry.addData("power left arm", arm_lt.getPower());
-            telemetry.addData("power right arm", arm_rt.getPower());
-            telemetry.addData("zero behavior left", arm_lt.getZeroPowerBehavior());
-            telemetry.addData("zero behavior right", arm_rt.getZeroPowerBehavior());
-            //telemetry.addData( "arm_lift", arm_lift.getPosition());
-            telemetry.addData("lift position", lift_position);
-            telemetry.addData("rotator position", rotator.getPosition());
-            telemetry.update();
         }
-        bk_lt.setPower(0);
-        ft_lt.setPower(0);
-        ft_rt.setPower(0);
-        bk_rt.setPower(0);
     }
-}
-
