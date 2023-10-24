@@ -21,6 +21,7 @@ public class MainRobot extends LinearOpMode {
         DcMotor bk_lt = hardwareMap.dcMotor.get("bk_lt");
         DcMotor ft_rt = hardwareMap.dcMotor.get("ft_rt");
         DcMotor ft_lt = hardwareMap.dcMotor.get("ft_lt");
+        DcMotor arm = hardwareMap.dcMotor.get("arm");
 
         // These may be robot dependant
         bk_lt.setDirection(DcMotor.Direction.REVERSE);
@@ -98,6 +99,10 @@ public class MainRobot extends LinearOpMode {
             ft_lt.setPower(ft_lt_power);
             ft_rt.setPower(ft_rt_power);
             bk_rt.setPower(bk_rt_power);
+
+            // Arm control
+            double arm_triggers = gamepad2.left_trigger - gamepad2.right_trigger;
+            arm.setPower(arm_triggers);
 
             telemetry.addData("Heading (degrees)", " %.1f", botHeading * 180.0 / Math.PI);
             telemetry.addData("Left Stick X", left_stick_x);
