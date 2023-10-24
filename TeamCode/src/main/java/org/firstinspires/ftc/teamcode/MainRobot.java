@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
@@ -22,6 +23,7 @@ public class MainRobot extends LinearOpMode {
         DcMotor ft_rt = hardwareMap.dcMotor.get("ft_rt");
         DcMotor ft_lt = hardwareMap.dcMotor.get("ft_lt");
         DcMotor arm = hardwareMap.dcMotor.get("arm");
+        Servo claw = hardwareMap.servo.get("claw");
 
         // These may be robot dependant
         bk_lt.setDirection(DcMotor.Direction.REVERSE);
@@ -103,6 +105,12 @@ public class MainRobot extends LinearOpMode {
             // Arm control
             double arm_triggers = gamepad2.left_trigger - gamepad2.right_trigger;
             arm.setPower(arm_triggers);
+
+            if (gamepad2.a) {
+                claw.setPosition(0);
+            } else if (gamepad2.y) {
+                claw.setPosition(1);
+            }
 
             telemetry.addData("Heading (degrees)", " %.1f", botHeading * 180.0 / Math.PI);
             telemetry.addData("Left Stick X", left_stick_x);
