@@ -40,6 +40,9 @@ public class MainRobot extends LinearOpMode {
         // Without this, the REV Hub's orientation is assumed to be logo up / USB forward
         imu.initialize(parameters);
 
+        // Resetting the YAW for now
+        imu.resetYaw();
+
         /*
         bk_lt.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         ft_lt.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
