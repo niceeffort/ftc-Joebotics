@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IMU;
 //import com.qualcomm.robotcore.hardware.Servo;
+//import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
@@ -14,7 +15,7 @@ public class Drive extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        boolean fieldCentric = false;
+        boolean fieldCentric = true;
 
         // Get the motors
         DcMotor bk_lt = hardwareMap.dcMotor.get("back_left_motor");
@@ -55,6 +56,11 @@ public class Drive extends LinearOpMode {
         arm_rt.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         arm_lt.setMode(DcMotor.RinMode.RUN_USING_ENCODER);
         */
+
+        /*
+        arm_lt.setMode(DcMotor.ZeroPowerBehavior);
+        arm_rt.setMode(DcMotor.ZeroPowerBehavior);
+         */
 
         telemetry.addData("Press Start When Ready","");
         telemetry.update();
