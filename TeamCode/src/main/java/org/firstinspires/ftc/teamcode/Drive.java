@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IMU;
 //import com.qualcomm.robotcore.hardware.Servo;
+
 //import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -57,10 +58,10 @@ public class Drive extends LinearOpMode {
         arm_lt.setMode(DcMotor.RinMode.RUN_USING_ENCODER);
         */
 
-        /*
-        arm_lt.setMode(DcMotor.ZeroPowerBehavior);
-        arm_rt.setMode(DcMotor.ZeroPowerBehavior);
-         */
+
+        arm_lt.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        arm_rt.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
 
         telemetry.addData("Press Start When Ready","");
         telemetry.update();
