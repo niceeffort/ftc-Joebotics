@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IMU;
-//import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.Servo;
 
 //import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
@@ -16,7 +16,7 @@ public class Drive extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        boolean fieldCentric = true;
+        boolean fieldCentric = false;
 
         // Get the motors
         DcMotor bk_lt = hardwareMap.dcMotor.get("back_left_motor");
@@ -25,7 +25,8 @@ public class Drive extends LinearOpMode {
         DcMotor bk_rt = hardwareMap.dcMotor.get("back_right_motor");
         DcMotor arm_rt = hardwareMap.dcMotor.get("arm_rt");
         DcMotor arm_lt = hardwareMap.dcMotor.get("arm_lt");
-        // servo = hardwareMap.get(Servo.class, "claw");
+        DcMotor rotator = hardwareMap.dcMotor.get("rotator");
+        Servo claw = hardwareMap.get(Servo.class, "claw");
 
         // These may be robot dependant
         bk_lt.setDirection(DcMotor.Direction.REVERSE);
@@ -71,15 +72,42 @@ public class Drive extends LinearOpMode {
             double left_stick_x = gamepad1.left_stick_x;
             double left_stick_y = -gamepad1.left_stick_y;
             double triggers = gamepad1.left_trigger - gamepad1.right_trigger;
-            boolean dpadDown = gamepad1.dpad_down;
-            boolean dpadUp = gamepad1.dpad_up;
+            boolean dpadDown = gamepad2.dpad_down;
+            boolean dpadUp = gamepad2.dpad_up;
+            boolean bumper_left = gamepad2.left_bumper;
+            boolean bumper_right = gamepad2.right_bumper;
+            boolean button_b = gamepad2.b;
+            boolean button_x = gamepad2.x;
+            boolean button_a = gamepad2.a;
+            boolean button_y = gamepad2.y;
+
+
+          /*  if (button_a == true) {
+                claw.setPosition(1);
+            } else if (button_y == true){
+                claw.setPosition(-1);
+            }
+
+            if (button_b == true) {
+                fieldCentric = true;
+            } else if (button_x == true){
+                fieldCentric = false;
+            }
+*/
+            if (bumper_left == true){
+                rotator.setPower(0.25);
+            } else if (bumper_right == true){
+                rotator.setPower(-0.25);
+            } else if (bumper_left == false && bumper_right == false){
+                rotator.setPower(0);
+            }
 
             if (dpadUp == true){
-                arm_rt.setPower(0.75);
-                arm_lt.setPower(0.75);
+                arm_rt.setPower(0.9);
+                arm_lt.setPower(0.9);
             } else if (dpadDown == true){
-                arm_rt.setPower(-0.60);
-                arm_lt.setPower(-0.60);
+                arm_rt.setPower(-0.9);
+                arm_lt.setPower(-0.96);
             } else if (dpadDown == false && dpadUp == false) {
                 arm_rt.setPower(0);
                 arm_lt.setPower(0);
