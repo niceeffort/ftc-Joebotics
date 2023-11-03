@@ -15,7 +15,7 @@ public class MainRobot extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        boolean fieldCentric = true;
+        boolean fieldCentric = false;
 
         // Get the motors
         DcMotor bk_rt = hardwareMap.dcMotor.get("bk_rt");
