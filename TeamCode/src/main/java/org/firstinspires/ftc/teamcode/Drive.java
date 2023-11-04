@@ -25,8 +25,8 @@ public class Drive extends LinearOpMode {
         DcMotor bk_rt = hardwareMap.dcMotor.get("back_right_motor");
         DcMotor arm_rt = hardwareMap.dcMotor.get("arm_rt");
         DcMotor arm_lt = hardwareMap.dcMotor.get("arm_lt");
-        DcMotor rotator = hardwareMap.dcMotor.get("rotator");
-        Servo claw = hardwareMap.get(Servo.class, "claw");
+        //DcMotor rotator = hardwareMap.dcMotor.get("rotator");
+       //Servo claw = hardwareMap.get(Servo.class, "claw");
 
         // These may be robot dependant
         bk_lt.setDirection(DcMotor.Direction.REVERSE);
@@ -94,14 +94,14 @@ public class Drive extends LinearOpMode {
                 fieldCentric = false;
             }
 */
-            if (bumper_left == true){
+          /*  if (bumper_left == true){
                 rotator.setPower(0.25);
             } else if (bumper_right == true){
                 rotator.setPower(-0.25);
             } else if (bumper_left == false && bumper_right == false){
                 rotator.setPower(0);
             }
-
+           */
             if (dpadUp == true){
                 arm_rt.setPower(0.9);
                 arm_lt.setPower(0.9);
