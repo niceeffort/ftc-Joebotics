@@ -16,6 +16,7 @@ public class MainRobot extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         boolean fieldCentric = false;
+        double MAX_ARM_POWER = .5;
 
         // Get the motors
         DcMotor bk_rt = hardwareMap.dcMotor.get("bk_rt");
@@ -23,6 +24,7 @@ public class MainRobot extends LinearOpMode {
         DcMotor ft_rt = hardwareMap.dcMotor.get("ft_rt");
         DcMotor ft_lt = hardwareMap.dcMotor.get("ft_lt");
         DcMotor arm = hardwareMap.dcMotor.get("arm");
+        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         Servo claw = hardwareMap.servo.get("claw");
 
         // These may be robot dependant
@@ -107,7 +109,7 @@ public class MainRobot extends LinearOpMode {
 
             // Arm control
             double arm_triggers = gamepad2.left_trigger - gamepad2.right_trigger;
-            arm.setPower(arm_triggers);
+            arm.setPower(arm_triggers * MAX_ARM_POWER);
 
             if (gamepad2.a) {
                 claw.setPosition(0);
