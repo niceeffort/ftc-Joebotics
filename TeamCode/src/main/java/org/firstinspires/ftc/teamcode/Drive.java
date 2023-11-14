@@ -25,8 +25,8 @@ public class Drive extends LinearOpMode {
         DcMotor bk_rt = hardwareMap.dcMotor.get("back_right_motor");
         DcMotor arm_rt = hardwareMap.dcMotor.get("arm_rt");
         DcMotor arm_lt = hardwareMap.dcMotor.get("arm_lt");
-        //DcMotor rotator = hardwareMap.dcMotor.get("rotator");
-       //Servo claw = hardwareMap.get(Servo.class, "claw");
+        DcMotor rotator = hardwareMap.dcMotor.get("rotator");
+        Servo claw = hardwareMap.get(Servo.class, "claw");
 
         // These may be robot dependant
         bk_lt.setDirection(DcMotor.Direction.REVERSE);
@@ -82,27 +82,56 @@ public class Drive extends LinearOpMode {
             boolean button_y = gamepad2.y;
 
 
-          /*  if (button_a == true) {
-                claw.setPosition(1);
-            } else if (button_y == true){
-                claw.setPosition(-1);
-            }
+
+           //open and close claw
+
+           if (button_a == true) {
+               claw.setPosition(1);
+           }
+
+           if (button_y == true){
+               claw.setPosition(-1);
+           }
+
+
+
+
+            //switch between field and robot centric
 
             if (button_b == true) {
                 fieldCentric = true;
             } else if (button_x == true){
                 fieldCentric = false;
             }
-*/
-          /*  if (bumper_left == true){
+
+
+            //rotator with motor
+
+            if (bumper_left == true){
                 rotator.setPower(0.25);
             } else if (bumper_right == true){
                 rotator.setPower(-0.25);
             } else if (bumper_left == false && bumper_right == false){
                 rotator.setPower(0);
             }
-           */
-            if (dpadUp == true){
+
+
+            //move arm using encoders
+
+            /*if (dpadUp == true){
+            arm_rt.setTargetPosition(1000);
+            arm_lt.setTargetPosition(1000);
+            }
+            if (dpadDown == true){
+            arm_rt.setTargetPosition(-1000);
+            arm_lt.setTargetPosition(-1000);
+            }*/
+
+
+
+            //run arm w/o encoders - less control, no holding
+
+             if (dpadUp == true){
                 arm_rt.setPower(0.9);
                 arm_lt.setPower(0.9);
             } else if (dpadDown == true){
