@@ -17,7 +17,9 @@ public class Drive extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         boolean fieldCentric = false;
-
+        double powerFactor = 1.0;
+        boolean lowPowerMode = false;
+        boolean aButtonPress = false;
         // Get the motors
         DcMotor bk_lt = hardwareMap.dcMotor.get("back_left_motor");
         DcMotor ft_lt = hardwareMap.dcMotor.get("front_left_motor");
@@ -178,10 +180,23 @@ public class Drive extends LinearOpMode {
             ft_rt_power /= max;
             bk_rt_power /= max;
 
-            bk_lt.setPower(bk_lt_power);
-            ft_lt.setPower(ft_lt_power);
-            ft_rt.setPower(ft_rt_power);
-            bk_rt.setPower(bk_rt_power);
+            if (gamepad1.a && !aButtonPress) {
+                aButtonPress = true;
+                if (lowPowerMode){
+                    powerFactor = 1.0;
+                    lowPowerMode = false;
+                } else{
+                    powerFactor = 0.25;
+                    lowPowerMode = true;
+                }
+
+            } else if (!gamepad1.a && aButtonPress) {
+                aButtonPress = false;
+            }
+            bk_lt.setPower(bk_lt_power * powerFactor);
+            ft_lt.setPower(ft_lt_power * powerFactor);
+            ft_rt.setPower(ft_rt_power * powerFactor);
+            bk_rt.setPower(bk_rt_power * powerFactor);
 
             telemetry.addData("Heading (degrees)", " %.1f", botHeading * 180.0 / Math.PI);
             telemetry.addData("Left Stick X", left_stick_x);
