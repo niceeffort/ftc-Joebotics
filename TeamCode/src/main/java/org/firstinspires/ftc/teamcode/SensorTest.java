@@ -12,7 +12,12 @@ public class SensorTest extends LinearOpMode {
         int red = 0;
         int green = 0;
         int blue = 0;
-        int colorThreshold = 20;
+        double colorTotal = 0;
+
+        double redPercent = 0;
+        double greenPercent = 0;
+        double bluePercent = 0;
+        double colorThreshold = .4;
 
         ColorSensor colorSensor = hardwareMap.colorSensor.get("color");
         waitForStart();
@@ -21,18 +26,22 @@ public class SensorTest extends LinearOpMode {
             red = colorSensor.red();
             green = colorSensor.green();
             blue = colorSensor.blue();
+            colorTotal = red + green + blue;
+            redPercent = red / colorTotal;
+            greenPercent = green / colorTotal;
+            bluePercent = blue / colorTotal;
 
-            telemetry.addData("red", red);
-            telemetry.addData("green", green);
-            telemetry.addData("blue", blue);
+            telemetry.addData("red", redPercent);
+            telemetry.addData("green", greenPercent);
+            telemetry.addData("blue", bluePercent);
 
-            if(red >= colorThreshold){
+            if(redPercent >= colorThreshold){
                 telemetry.addLine("seeing red");
             }
-            else if(blue >= colorThreshold){
+            else if(bluePercent >= colorThreshold){
                 telemetry.addLine("seeing blue");
             }
-            else if(green >= colorThreshold){
+            else if(greenPercent >= colorThreshold){
                 telemetry.addLine("seeing green");
             }
             else{
