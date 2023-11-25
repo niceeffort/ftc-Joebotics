@@ -80,19 +80,22 @@ public class Drive extends LinearOpMode {
             boolean bumper_right = gamepad2.right_bumper;
             boolean button_b = gamepad2.b;
             boolean button_x = gamepad2.x;
-            boolean button_a = gamepad2.a;
-            boolean button_y = gamepad2.y;
+            boolean button_2a = gamepad2.a;
+            boolean button_2y = gamepad2.y;
 
 
 
            //open and close claw
 
-           if (button_a == true) {
+           if (button_2a == true && button_2y == false) {
+               claw.setDirection(Servo.Direction.REVERSE);
                claw.setPosition(1);
+               telemetry.addLine("opening claw");
            }
-
-           if (button_y == true){
-               claw.setPosition(-1);
+           else if (button_2y == true && button_2a == false){
+               claw.setDirection(Servo.Direction.FORWARD);
+               claw.setPosition(0.5);
+               telemetry.addLine("closing claw");
            }
 
 
@@ -123,10 +126,20 @@ public class Drive extends LinearOpMode {
             /*if (dpadUp == true){
             arm_rt.setTargetPosition(1000);
             arm_lt.setTargetPosition(1000);
+            arm_rt.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            arm_lt.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            arm_rt.setMode(DcMotor.RunMode.STOP_AND_RESET_POSITION);
+            arm_lt.setMode(DcMotor.RunMode.STOP_AND_RESET_POSITION);
             }
             if (dpadDown == true){
             arm_rt.setTargetPosition(-1000);
             arm_lt.setTargetPosition(-1000);
+            arm_rt.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            arm_lt.setMode)DcMotor.RunMode.RUN_TO_POSITION);
+
+            arm_rt.setMode(DcMotor.RunMode.STOP_AND_RESET_POSITION);
+            arm_lt.setMode(DcMotor.RunMode.STOP_AND_RESET_POSITION);
             }*/
 
 
@@ -204,6 +217,8 @@ public class Drive extends LinearOpMode {
             telemetry.addData("Triggers", triggers);
             telemetry.addData("dpadUp", dpadUp);
             telemetry.addData("dpadDown", dpadDown);
+            telemetry.addData("2y", button_2y);
+            telemetry.addData("2a", button_2a);
             telemetry.update();
         }
         bk_lt.setPower(0);
