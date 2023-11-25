@@ -24,8 +24,12 @@ public class MainRobot extends LinearOpMode {
         DcMotor ft_rt = hardwareMap.dcMotor.get("ft_rt");
         DcMotor ft_lt = hardwareMap.dcMotor.get("ft_lt");
         DcMotor arm = hardwareMap.dcMotor.get("arm");
-        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        DcMotor winch = hardwareMap.dcMotor.get("winch");
         Servo claw = hardwareMap.servo.get("claw");
+
+        // Setting the brake behavior for winch and arm
+        winch.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // These may be robot dependant
         bk_lt.setDirection(DcMotor.Direction.REVERSE);
@@ -111,10 +115,24 @@ public class MainRobot extends LinearOpMode {
             double arm_triggers = gamepad2.left_trigger - gamepad2.right_trigger;
             arm.setPower(arm_triggers * MAX_ARM_POWER);
 
-            if (gamepad2.a) {
+            // Claw control
+            if (gamepad2.a) { //open
                 claw.setPosition(0);
-            } else if (gamepad2.y) {
-                claw.setPosition(1);
+            } else if (gamepad2.y) { //close
+                claw.setPosition(.1);
+            }
+
+            // Winch control
+            if (gamepad2.b) {
+                if (gamepad2.dpad_up) {
+                    winch.setPower(1.0);
+                } else if (gamepad2.dpad_down) {
+                    winch.setPower(-1.0);
+                } else {
+                    winch.setPower(0.0);
+                }
+            } else {
+                winch.setPower(0.0);
             }
 
             telemetry.addData("Heading (degrees)", " %.1f", botHeading * 180.0 / Math.PI);
