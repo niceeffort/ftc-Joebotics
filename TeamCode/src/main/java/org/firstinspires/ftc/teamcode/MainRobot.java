@@ -119,7 +119,7 @@ public class MainRobot extends LinearOpMode {
             if (gamepad2.a) { //open
                 claw.setPosition(0);
             } else if (gamepad2.y) { //close
-                claw.setPosition(.1);
+                claw.setPosition(.25);
             }
 
             // Winch control
