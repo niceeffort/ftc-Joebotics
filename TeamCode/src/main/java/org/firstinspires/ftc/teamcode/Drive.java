@@ -51,14 +51,14 @@ public class Drive extends LinearOpMode {
         ft_rt.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bk_rt.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         arm_rt.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        arm_lt.setMode(DcMotor.RinMode.STOP_AND_RESET_ENCODER);
+        arm_lt.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         bk_lt.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         ft_lt.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         ft_rt.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         bk_rt.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         arm_rt.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        arm_lt.setMode(DcMotor.RinMode.RUN_USING_ENCODER);
+        arm_lt.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         */
 
 
@@ -85,7 +85,7 @@ public class Drive extends LinearOpMode {
 
 
 
-           //open and close claw
+           //open and close claw - working
 
            if (button_2a == true && button_2y == false) {
                claw.setDirection(Servo.Direction.REVERSE);
@@ -101,16 +101,16 @@ public class Drive extends LinearOpMode {
 
 
 
-            //switch between field and robot centric
+            //switch between field and robot centric - untested
 
-            if (button_b == true) {
+           /* if (button_b == true) {
                 fieldCentric = true;
             } else if (button_x == true){
                 fieldCentric = false;
-            }
+            } */
 
 
-            //rotator with motor
+            //rotator with motor - working; too fast?
 
             if (bumper_left == true){
                 rotator.setPower(0.25);
@@ -123,24 +123,25 @@ public class Drive extends LinearOpMode {
 
             //move arm using encoders
 
-            /*if (dpadUp == true){
-            arm_rt.setTargetPosition(1000);
-            arm_lt.setTargetPosition(1000);
+            /*if (dpadUp){
+            arm_rt.setTargetPosition(200);
+            arm_lt.setTargetPosition(200);
             arm_rt.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             arm_lt.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-            arm_rt.setMode(DcMotor.RunMode.STOP_AND_RESET_POSITION);
-            arm_lt.setMode(DcMotor.RunMode.STOP_AND_RESET_POSITION);
+            arm_rt.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            arm_lt.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             }
-            if (dpadDown == true){
-            arm_rt.setTargetPosition(-1000);
-            arm_lt.setTargetPosition(-1000);
+
+            if (!dpadDown){
+            arm_rt.setTargetPosition(-200);
+            arm_lt.setTargetPosition(-200);
             arm_rt.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             arm_lt.setMode)DcMotor.RunMode.RUN_TO_POSITION);
 
-            arm_rt.setMode(DcMotor.RunMode.STOP_AND_RESET_POSITION);
-            arm_lt.setMode(DcMotor.RunMode.STOP_AND_RESET_POSITION);
-            }*/
+            arm_rt.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            arm_lt.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            } */
 
 
 
