@@ -50,16 +50,22 @@ public class Drive extends LinearOpMode {
         ft_lt.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         ft_rt.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bk_rt.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        arm_rt.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        arm_lt.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+
 
         bk_lt.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         ft_lt.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         ft_rt.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         bk_rt.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        */
+
+        arm_rt.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        arm_lt.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         arm_rt.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         arm_lt.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        */
+
 
 
         arm_lt.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -78,8 +84,8 @@ public class Drive extends LinearOpMode {
             boolean dpadUp = gamepad2.dpad_up;
             boolean bumper_left = gamepad2.left_bumper;
             boolean bumper_right = gamepad2.right_bumper;
-            boolean button_b = gamepad2.b;
-            boolean button_x = gamepad2.x;
+            boolean button_2b = gamepad2.b;
+            boolean button_2x = gamepad2.x;
             boolean button_2a = gamepad2.a;
             boolean button_2y = gamepad2.y;
 
@@ -103,9 +109,9 @@ public class Drive extends LinearOpMode {
 
             //switch between field and robot centric - untested
 
-           /* if (button_b == true) {
+           /* if (button_2b == true) {
                 fieldCentric = true;
-            } else if (button_x == true){
+            } else if (button_2x == true){
                 fieldCentric = false;
             } */
 
@@ -123,31 +129,47 @@ public class Drive extends LinearOpMode {
 
             //move arm using encoders
 
-            /*if (dpadUp){
+            if (dpadUp){
             arm_rt.setTargetPosition(200);
             arm_lt.setTargetPosition(200);
             arm_rt.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             arm_lt.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            arm_rt.setPower(0.5);
+            arm_lt.setPower(0.5);
+
+            while(arm_rt.isBusy() || arm_lt.isBusy()){
+                telemetry.addData("right motor is busy", arm_rt.isBusy());
+                telemetry.addData("left motor is busy", arm_lt.isBusy());
+                telemetry.addData("arm left position", arm_lt.getCurrentPosition());
+                telemetry.addData("arm right position", arm_rt.getCurrentPosition());
+                telemetry.update();
+            }
 
             arm_rt.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             arm_lt.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            arm_rt.setPower(0);
+            arm_lt.setPower(0);
             }
 
-            if (!dpadDown){
+            else if (dpadDown){
             arm_rt.setTargetPosition(-200);
             arm_lt.setTargetPosition(-200);
             arm_rt.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            arm_lt.setMode)DcMotor.RunMode.RUN_TO_POSITION);
+            arm_lt.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            arm_rt.setPower(0.5);
+            arm_lt.setPower(0.5);
 
-            arm_rt.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            arm_lt.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            } */
+            //arm_rt.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            //arm_lt.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            //arm_rt.setPower(0);
+            //arm_lt.setPower(0);
+            }
 
 
 
             //run arm w/o encoders - less control, no holding
 
-             if (dpadUp == true){
+           /*  if (dpadUp == true){
                 arm_rt.setPower(0.9);
                 arm_lt.setPower(0.9);
             } else if (dpadDown == true){
@@ -156,7 +178,7 @@ public class Drive extends LinearOpMode {
             } else if (dpadDown == false && dpadUp == false) {
                 arm_rt.setPower(0);
                 arm_lt.setPower(0);
-            }
+            } */
 
             if (Math.abs(triggers) < 0.05) triggers = 0;
             double bk_lt_power = -left_stick_x + left_stick_y - triggers;
@@ -220,6 +242,10 @@ public class Drive extends LinearOpMode {
             telemetry.addData("dpadDown", dpadDown);
             telemetry.addData("2y", button_2y);
             telemetry.addData("2a", button_2a);
+            telemetry.addData("arm left position", arm_lt.getCurrentPosition());
+            telemetry.addData("arm right position", arm_rt.getCurrentPosition());
+            telemetry.addData("info", arm_rt.getMode());
+            telemetry.addData("arm left target pos", arm_lt.getTargetPosition());
             telemetry.update();
         }
         bk_lt.setPower(0);
