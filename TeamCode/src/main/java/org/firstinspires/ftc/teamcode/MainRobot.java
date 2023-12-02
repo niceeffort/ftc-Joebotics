@@ -17,6 +17,8 @@ public class MainRobot extends LinearOpMode {
 
         boolean fieldCentric = false;
         double MAX_ARM_POWER = .5;
+        boolean back_pressed = false;
+
 
         // Get the motors
         DcMotor bk_rt = hardwareMap.dcMotor.get("bk_rt");
@@ -80,6 +82,14 @@ public class MainRobot extends LinearOpMode {
             //double botHeading = imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle;
             double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
 
+            if(gamepad1.back && !back_pressed){
+                fieldCentric = !fieldCentric;
+                back_pressed = true;
+            }
+            else if(!gamepad1.back){
+                back_pressed = false;
+            }
+
             // Rotate the movement direction counter to the bot's rotation
             if (fieldCentric) {
 
@@ -134,7 +144,7 @@ public class MainRobot extends LinearOpMode {
             } else {
                 winch.setPower(0.0);
             }
-
+            telemetry.addData("Field Centric", fieldCentric);
             telemetry.addData("Heading (degrees)", " %.1f", botHeading * 180.0 / Math.PI);
             telemetry.addData("Left Stick X", left_stick_x);
             telemetry.addData("Left Stick Y", left_stick_y);
