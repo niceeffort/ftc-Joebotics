@@ -20,6 +20,8 @@ public class Drive extends LinearOpMode {
         double powerFactor = 1.0;
         boolean lowPowerMode = false;
         boolean aButtonPress = false;
+        boolean button_2bPressed = false;
+        int lift_position = 0;
         // Get the motors
         DcMotor bk_lt = hardwareMap.dcMotor.get("back_left_motor");
         DcMotor ft_lt = hardwareMap.dcMotor.get("front_left_motor");
@@ -29,6 +31,7 @@ public class Drive extends LinearOpMode {
         DcMotor arm_lt = hardwareMap.dcMotor.get("arm_lt");
         DcMotor rotator = hardwareMap.dcMotor.get("rotator");
         Servo claw = hardwareMap.get(Servo.class, "claw");
+        Servo arm_lift = hardwareMap.get(Servo.class, "arm_lift");
 
         // These may be robot dependant
         bk_lt.setDirection(DcMotor.Direction.REVERSE);
@@ -84,10 +87,13 @@ public class Drive extends LinearOpMode {
             boolean dpadUp = gamepad2.dpad_up;
             boolean bumper_left = gamepad2.left_bumper;
             boolean bumper_right = gamepad2.right_bumper;
-            boolean button_2b = gamepad2.b;
-            boolean button_2x = gamepad2.x;
+            boolean button_1b = gamepad1.b;
+            boolean button_1x = gamepad1.x;
             boolean button_2a = gamepad2.a;
             boolean button_2y = gamepad2.y;
+            boolean button_2b = gamepad2.b;
+
+
 
 
 
@@ -104,14 +110,28 @@ public class Drive extends LinearOpMode {
                telemetry.addLine("closing claw");
            }
 
+           if (button_2b && !button_2bPressed) {
+               button_2bPressed = true;
+               if (lift_position == 1) {
+                   lift_position = 0;
+               }
+               else {
+                   lift_position = 1;
+               }
+
+               arm_lift.setPosition(lift_position);
+           }
+           else if (!button_2b && button_2bPressed) {
+                button_2bPressed = false;
+            }
 
 
 
             //switch between field and robot centric - untested
 
-           /* if (button_2b == true) {
+            /* if (button_1b == true) {
                 fieldCentric = true;
-            } else if (button_2x == true){
+            } else if (button_1x == true){
                 fieldCentric = false;
             } */
 
@@ -130,14 +150,14 @@ public class Drive extends LinearOpMode {
             //move arm using encoders
 
             if (dpadUp){
-            arm_rt.setTargetPosition(200);
-            arm_lt.setTargetPosition(200);
+            arm_rt.setTargetPosition(50);
+            arm_lt.setTargetPosition(50);
             arm_rt.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             arm_lt.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            arm_rt.setPower(0.5);
-            arm_lt.setPower(0.5);
+            arm_rt.setPower(0.25);
+            arm_lt.setPower(0.25);
 
-            while(arm_rt.isBusy() || arm_lt.isBusy()){
+            /* while(arm_rt.isBusy() || arm_lt.isBusy()){
                 telemetry.addData("right motor is busy", arm_rt.isBusy());
                 telemetry.addData("left motor is busy", arm_lt.isBusy());
                 telemetry.addData("arm left position", arm_lt.getCurrentPosition());
@@ -145,24 +165,28 @@ public class Drive extends LinearOpMode {
                 telemetry.update();
             }
 
-            arm_rt.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            arm_lt.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             arm_rt.setPower(0);
-            arm_lt.setPower(0);
+            arm_lt.setPower(0); */
             }
 
             else if (dpadDown){
-            arm_rt.setTargetPosition(-200);
-            arm_lt.setTargetPosition(-200);
+            arm_rt.setTargetPosition(0);
+            arm_lt.setTargetPosition(0);
             arm_rt.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             arm_lt.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            arm_rt.setPower(0.5);
-            arm_lt.setPower(0.5);
+            arm_rt.setPower(0.25);
+            arm_lt.setPower(0.25);
 
-            //arm_rt.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            //arm_lt.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            //arm_rt.setPower(0);
-            //arm_lt.setPower(0);
+            /* while(arm_rt.isBusy() || arm_lt.isBusy()){
+                telemetry.addData("right motor is busy", arm_rt.isBusy());
+                telemetry.addData("left motor is busy", arm_lt.isBusy());
+                telemetry.addData("arm left position", arm_lt.getCurrentPosition());
+                telemetry.addData("arm right position", arm_rt.getCurrentPosition());
+                telemetry.update();
+            } */
+
+            arm_rt.setPower(0);
+            arm_lt.setPower(0);
             }
 
 
@@ -244,8 +268,14 @@ public class Drive extends LinearOpMode {
             telemetry.addData("2a", button_2a);
             telemetry.addData("arm left position", arm_lt.getCurrentPosition());
             telemetry.addData("arm right position", arm_rt.getCurrentPosition());
-            telemetry.addData("info", arm_rt.getMode());
+            telemetry.addData("mode", arm_rt.getMode());
             telemetry.addData("arm left target pos", arm_lt.getTargetPosition());
+            telemetry.addData("power left arm", arm_lt.getPower());
+            telemetry.addData("power right arm", arm_rt.getPower());
+            telemetry.addData("zero behavior left", arm_lt.getZeroPowerBehavior());
+            telemetry.addData("zero behavior right", arm_rt.getZeroPowerBehavior());
+            telemetry.addData( "arm_lift", arm_lift.getPosition());
+            telemetry.addData("lift position", lift_position);
             telemetry.update();
         }
         bk_lt.setPower(0);
