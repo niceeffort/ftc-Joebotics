@@ -150,8 +150,8 @@ public class Drive extends LinearOpMode {
             //move arm using encoders
 
             if (dpadUp){
-            arm_rt.setTargetPosition(50);
-            arm_lt.setTargetPosition(50);
+            arm_rt.setTargetPosition(85);
+            arm_lt.setTargetPosition(85);
             arm_rt.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             arm_lt.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             arm_rt.setPower(0.25);
