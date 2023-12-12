@@ -95,6 +95,7 @@ public class MainRobot extends LinearOpMode {
 
                 // This can be used if the robot become uncalibrated. Point the robot away from you and press start.
                 if (gamepad1.start) {
+                    imu.initialize(parameters);
                     imu.resetYaw();
                 }
 
