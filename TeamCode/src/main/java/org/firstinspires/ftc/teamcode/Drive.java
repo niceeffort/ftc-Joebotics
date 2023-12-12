@@ -29,9 +29,10 @@ public class Drive extends LinearOpMode {
         DcMotor bk_rt = hardwareMap.dcMotor.get("back_right_motor");
         DcMotor arm_rt = hardwareMap.dcMotor.get("arm_rt");
         DcMotor arm_lt = hardwareMap.dcMotor.get("arm_lt");
-        DcMotor rotator = hardwareMap.dcMotor.get("rotator");
+        //DcMotor rotator = hardwareMap.dcMotor.get("rotator");
         Servo claw = hardwareMap.get(Servo.class, "claw");
         Servo arm_lift = hardwareMap.get(Servo.class, "arm_lift");
+        Servo rotator = hardwareMap.servo.get("rotator");
 
         // These may be robot dependant
         bk_lt.setDirection(DcMotor.Direction.REVERSE);
@@ -87,6 +88,7 @@ public class Drive extends LinearOpMode {
             boolean dpadUp = gamepad2.dpad_up;
             boolean bumper_left = gamepad2.left_bumper;
             boolean bumper_right = gamepad2.right_bumper;
+            boolean button_2x = gamepad2.x;
             boolean button_1b = gamepad1.b;
             boolean button_1x = gamepad1.x;
             boolean button_2a = gamepad2.a;
@@ -136,15 +138,24 @@ public class Drive extends LinearOpMode {
             } */
 
 
+            //rotator with servo
+            if (bumper_left == true){
+                rotator.setPosition(0);
+            } else if (button_2x == true){
+                rotator.setPosition(0.3);
+            } else if (bumper_right == true){
+                rotator.setPosition(0.8);
+            }
+
             //rotator with motor - working; too fast?
 
-            if (bumper_left == true){
+           /* if (bumper_left == true){
                 rotator.setPower(0.25);
             } else if (bumper_right == true){
                 rotator.setPower(-0.25);
             } else if (bumper_left == false && bumper_right == false){
                 rotator.setPower(0);
-            }
+            } */
 
 
             //move arm using encoders
