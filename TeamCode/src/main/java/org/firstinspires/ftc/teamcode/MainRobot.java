@@ -16,7 +16,7 @@ public class MainRobot extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         boolean fieldCentric = false;
-        double MAX_ARM_POWER = .5;
+        double MAX_ARM_POWER =.5;
         boolean back_pressed = false;
 
 
@@ -28,6 +28,9 @@ public class MainRobot extends LinearOpMode {
         DcMotor arm = hardwareMap.dcMotor.get("arm");
         DcMotor winch = hardwareMap.dcMotor.get("winch");
         Servo claw = hardwareMap.servo.get("claw");
+        //added
+        Servo small_lift = hardwareMap.servo.get("small_lift");
+
 
         // Setting the brake behavior for winch and arm
         winch.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -131,6 +134,13 @@ public class MainRobot extends LinearOpMode {
                 claw.setPosition(0);
             } else if (gamepad2.y) { //close
                 claw.setPosition(.25);
+            }
+
+            //added
+            if (gamepad1.a) { //open
+                small_lift.setPosition(.75);
+            } else if (gamepad1.y) { //close
+                small_lift.setPosition(.3);
             }
 
             // Winch control
