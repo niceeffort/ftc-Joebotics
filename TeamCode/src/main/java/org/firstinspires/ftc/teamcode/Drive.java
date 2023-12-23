@@ -103,7 +103,7 @@ public class Drive extends LinearOpMode {
 
            if (button_2a == true && button_2y == false) {
                claw.setDirection(Servo.Direction.REVERSE);
-               claw.setPosition(1);
+               claw.setPosition(0.6);
                telemetry.addLine("opening claw");
            }
            else if (button_2y == true && button_2a == false){
@@ -115,9 +115,11 @@ public class Drive extends LinearOpMode {
            if (button_2b && !button_2bPressed) {
                button_2bPressed = true;
                if (lift_position == 1) {
-                   lift_position = 0;
+                  arm_lift.setDirection(Servo.Direction.REVERSE);
+                  lift_position = 0;
                }
                else {
+                   arm_lift.setDirection(Servo.Direction.REVERSE);
                    lift_position = 1;
                }
 
@@ -142,9 +144,9 @@ public class Drive extends LinearOpMode {
             if (bumper_left == true){
                 rotator.setPosition(0);
             } else if (button_2x == true){
-                rotator.setPosition(0.3);
+                rotator.setPosition(0.22);
             } else if (bumper_right == true){
-                rotator.setPosition(0.8);
+                rotator.setPosition(0.95);
             }
 
             //rotator with motor - working; too fast?
@@ -277,6 +279,7 @@ public class Drive extends LinearOpMode {
             telemetry.addData("dpadDown", dpadDown);
             telemetry.addData("2y", button_2y);
             telemetry.addData("2a", button_2a);
+            telemetry.addData("2b", button_2b);
             telemetry.addData("arm left position", arm_lt.getCurrentPosition());
             telemetry.addData("arm right position", arm_rt.getCurrentPosition());
             telemetry.addData("mode", arm_rt.getMode());
@@ -287,6 +290,7 @@ public class Drive extends LinearOpMode {
             telemetry.addData("zero behavior right", arm_rt.getZeroPowerBehavior());
             telemetry.addData( "arm_lift", arm_lift.getPosition());
             telemetry.addData("lift position", lift_position);
+            telemetry.addData("rotator position", rotator.getPosition());
             telemetry.update();
         }
         bk_lt.setPower(0);
