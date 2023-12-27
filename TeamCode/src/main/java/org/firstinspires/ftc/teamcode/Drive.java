@@ -30,9 +30,10 @@ public class Drive extends LinearOpMode {
         DcMotor arm_rt = hardwareMap.dcMotor.get("arm_rt");
         DcMotor arm_lt = hardwareMap.dcMotor.get("arm_lt");
         //DcMotor rotator = hardwareMap.dcMotor.get("rotator");
-        Servo claw = hardwareMap.get(Servo.class, "claw");
-        Servo arm_lift = hardwareMap.get(Servo.class, "arm_lift");
+        Servo claw = hardwareMap.servo.get("claw");
+        Servo arm_lift = hardwareMap.servo.get("arm_lift");
         Servo rotator = hardwareMap.servo.get("rotator");
+        Servo drone = hardwareMap.servo.get("drone");
 
         // These may be robot dependant
         bk_lt.setDirection(DcMotor.Direction.REVERSE);
@@ -94,6 +95,7 @@ public class Drive extends LinearOpMode {
             boolean button_2a = gamepad2.a;
             boolean button_2y = gamepad2.y;
             boolean button_2b = gamepad2.b;
+            boolean button_1y = gamepad1.y;
 
 
 
@@ -102,15 +104,15 @@ public class Drive extends LinearOpMode {
            //open and close claw - working
 
            if (button_2a == true && button_2y == false) {
-               claw.setDirection(Servo.Direction.REVERSE);
-               claw.setPosition(0.6);
+               claw.setPosition(0.8);
                telemetry.addLine("opening claw");
            }
            else if (button_2y == true && button_2a == false){
-               claw.setDirection(Servo.Direction.FORWARD);
-               claw.setPosition(0.5);
+               claw.setPosition(0.9);
                telemetry.addLine("closing claw");
            }
+
+
 
            if (button_2b && !button_2bPressed) {
                button_2bPressed = true;
@@ -131,6 +133,14 @@ public class Drive extends LinearOpMode {
 
 
 
+           //drone launcher
+
+           if (button_1y == true){
+               drone.setPosition(1);
+           }
+
+
+
             //switch between field and robot centric - untested
 
             /* if (button_1b == true) {
@@ -140,7 +150,9 @@ public class Drive extends LinearOpMode {
             } */
 
 
+
             //rotator with servo
+
             if (bumper_left == true){
                 rotator.setPosition(0);
             } else if (button_2x == true){
@@ -148,6 +160,8 @@ public class Drive extends LinearOpMode {
             } else if (bumper_right == true){
                 rotator.setPosition(0.95);
             }
+
+
 
             //rotator with motor - working; too fast?
 
@@ -160,15 +174,16 @@ public class Drive extends LinearOpMode {
             } */
 
 
+
             //move arm using encoders
 
             if (dpadUp){
-            arm_rt.setTargetPosition(85);
-            arm_lt.setTargetPosition(85);
+            arm_rt.setTargetPosition(55);
+            arm_lt.setTargetPosition(55);
             arm_rt.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             arm_lt.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            arm_rt.setPower(0.25);
-            arm_lt.setPower(0.25);
+            arm_rt.setPower(0.5);
+            arm_lt.setPower(0.5);
 
             /* while(arm_rt.isBusy() || arm_lt.isBusy()){
                 telemetry.addData("right motor is busy", arm_rt.isBusy());
@@ -181,14 +196,13 @@ public class Drive extends LinearOpMode {
             arm_rt.setPower(0);
             arm_lt.setPower(0); */
             }
-
             else if (dpadDown){
             arm_rt.setTargetPosition(0);
             arm_lt.setTargetPosition(0);
             arm_rt.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             arm_lt.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            arm_rt.setPower(0.25);
-            arm_lt.setPower(0.25);
+            arm_rt.setPower(0.35);
+            arm_lt.setPower(0.35);
 
             /* while(arm_rt.isBusy() || arm_lt.isBusy()){
                 telemetry.addData("right motor is busy", arm_rt.isBusy());
