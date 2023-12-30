@@ -12,15 +12,15 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 public class MecanumDrive {
     boolean fieldCentric = true;
-    LinearOpMode myOpMode = null;
-    HardwareMap hardwareMap = null;
-    Gamepad gamepad1 = null;
-    DcMotor bk_lt = null;
-    DcMotor ft_lt = null;
-    DcMotor ft_rt = null;
-    DcMotor bk_rt = null;
-    IMU imu = null;
-    Telemetry telemetry = null;
+    LinearOpMode myOpMode;
+    HardwareMap hardwareMap;
+    Gamepad gamepad1;
+    DcMotor bk_lt;
+    DcMotor ft_lt;
+    DcMotor ft_rt;
+    DcMotor bk_rt;
+    IMU imu;
+    Telemetry telemetry;
 
     public MecanumDrive(LinearOpMode opMode){
         myOpMode = opMode;
@@ -54,10 +54,10 @@ public class MecanumDrive {
 
     }
 
-    public void Update(){
-        double left_stick_x = gamepad1.left_stick_x;
-        double left_stick_y = -gamepad1.left_stick_y;
-        double triggers = gamepad1.left_trigger - gamepad1.right_trigger;
+    public void Update(double input_left_stick_x, double input_left_stick_y, double input_left_trigger, double input_right_trigger){
+        double left_stick_x = input_left_stick_x;
+        double left_stick_y = -input_left_stick_y;
+        double triggers = input_left_trigger - input_right_trigger;
 
         if (Math.abs(triggers) < 0.05) triggers = 0;
         double bk_lt_power = -left_stick_x + left_stick_y - triggers;

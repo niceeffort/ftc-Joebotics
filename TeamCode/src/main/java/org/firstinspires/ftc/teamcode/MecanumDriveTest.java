@@ -11,7 +11,7 @@ public class MecanumDriveTest extends LinearOpMode {
         myDrive = new MecanumDrive(this);
         waitForStart();
         while(opModeIsActive()){
-            myDrive.Update();
+            myDrive.Update(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.left_trigger, gamepad1.right_trigger);
         }
     }
 }
