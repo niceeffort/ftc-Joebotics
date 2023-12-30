@@ -20,6 +20,9 @@ public class DriveToColor extends LinearOpMode {
             if(color > 0){
                 color_found = true;
             }
+            else{
+                color_found = false;
+            }
             if(color_found){
                 myDrive.Update(0,0,0,0);
             }

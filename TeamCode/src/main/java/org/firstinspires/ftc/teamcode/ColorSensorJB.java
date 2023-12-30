@@ -56,6 +56,7 @@ public class ColorSensorJB {
             telemetry.addLine("seeing blue");
         }
         else{
+            color = 0;
             telemetry.addLine("seeing nothing");
         }
 
