@@ -87,8 +87,8 @@ public class Drive extends LinearOpMode {
             double left_stick_x = gamepad1.left_stick_x;
             double left_stick_y = -gamepad1.left_stick_y;
             double triggers = gamepad1.left_trigger - gamepad1.right_trigger;
-            boolean dpadDown = gamepad2.dpad_down;
-            boolean dpadUp = gamepad2.dpad_up;
+            boolean dpadDown2 = gamepad2.dpad_down;
+            boolean dpadUp2 = gamepad2.dpad_up;
             boolean bumper_left = gamepad2.left_bumper;
             boolean bumper_right = gamepad2.right_bumper;
             boolean button_2x = gamepad2.x;
@@ -160,7 +160,7 @@ public class Drive extends LinearOpMode {
             } else if (button_2x == true){
                 rotator.setPosition(0.22);
             } else if (bumper_right == true){
-                rotator.setPosition(0.98);
+                rotator.setPosition(0.99);
             }
 
 
@@ -179,7 +179,7 @@ public class Drive extends LinearOpMode {
 
             //move arm using encoders
 
-            if (dpadUp){
+            if (dpadUp2){
             arm_rt.setTargetPosition(140);
             arm_lt.setTargetPosition(140);
             arm_rt.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -198,7 +198,7 @@ public class Drive extends LinearOpMode {
             arm_rt.setPower(0);
             arm_lt.setPower(0); */
             }
-            else if (dpadDown){
+            else if (dpadDown2){
             arm_rt.setTargetPosition(0);
             arm_lt.setTargetPosition(0);
             arm_rt.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -222,13 +222,13 @@ public class Drive extends LinearOpMode {
 
             //run arm w/o encoders - less control, no holding
 
-           /*  if (dpadUp == true){
+           /*  if (dpadUp2 == true){
                 arm_rt.setPower(0.9);
                 arm_lt.setPower(0.9);
-            } else if (dpadDown == true){
+            } else if (dpadDown2 == true){
                 arm_rt.setPower(-0.9);
                 arm_lt.setPower(-0.96);
-            } else if (dpadDown == false && dpadUp == false) {
+            } else if (dpadDown2 == false && dpadUp2 == false) {
                 arm_rt.setPower(0);
                 arm_lt.setPower(0);
             } */
@@ -291,8 +291,8 @@ public class Drive extends LinearOpMode {
             telemetry.addData("Left Stick X", left_stick_x);
             telemetry.addData("Left Stick Y", left_stick_y);
             telemetry.addData("Triggers", triggers);
-            telemetry.addData("dpadUp", dpadUp);
-            telemetry.addData("dpadDown", dpadDown);
+            telemetry.addData("dpadUp2", dpadUp2);
+            telemetry.addData("dpadDown2", dpadDown2);
             telemetry.addData("2y", button_2y);
             telemetry.addData("2a", button_2a);
             telemetry.addData("2b", button_2b);
