@@ -165,6 +165,7 @@ public class MainRobot extends LinearOpMode {
             } else {
                 winch.setPower(0.0);
             }
+
             telemetry.addData("Field Centric", fieldCentric);
             telemetry.addData("Heading (degrees)", " %.1f", botHeading * 180.0 / Math.PI);
             telemetry.addData("Left Stick X", left_stick_x);
