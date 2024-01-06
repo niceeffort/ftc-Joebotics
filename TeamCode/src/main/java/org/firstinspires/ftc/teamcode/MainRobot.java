@@ -4,6 +4,7 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -26,6 +27,7 @@ public class MainRobot extends LinearOpMode {
         DcMotor ft_lt = hardwareMap.dcMotor.get("ft_lt");
         DcMotor arm = hardwareMap.dcMotor.get("arm");
         DcMotor winch = hardwareMap.dcMotor.get("winch");
+        DcMotor winch2 = hardwareMap.dcMotor.get("winch2");
         Servo claw = hardwareMap.servo.get("claw");
         Servo launcher = hardwareMap.servo.get("launcher");
 
@@ -34,6 +36,8 @@ public class MainRobot extends LinearOpMode {
 
         // Setting the brake behavior for winch and arm
         winch.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        winch2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        winch2.setDirection(DcMotorSimple.Direction.REVERSE);
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // These may be robot dependant
@@ -149,13 +153,17 @@ public class MainRobot extends LinearOpMode {
             if (gamepad2.b) {
                 if (gamepad2.dpad_up) {
                     winch.setPower(1.0);
+                    winch2.setPower(1.0);
                 } else if (gamepad2.dpad_down) {
                     winch.setPower(-1.0);
+                    winch2.setPower(-1.0);
                 } else {
                     winch.setPower(0.0);
+                    winch2.setPower(0.0);
                 }
             } else {
                 winch.setPower(0.0);
+                winch2.setPower(0.0);
             }
 
             telemetry.addData("Field Centric", fieldCentric);
