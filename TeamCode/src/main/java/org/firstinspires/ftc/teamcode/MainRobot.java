@@ -27,6 +27,7 @@ public class MainRobot extends LinearOpMode {
         DcMotor arm = hardwareMap.dcMotor.get("arm");
         DcMotor winch = hardwareMap.dcMotor.get("winch");
         Servo claw = hardwareMap.servo.get("claw");
+        Servo small_lift = hardwareMap.servo.get("small_lift");
         Servo launcher = hardwareMap.servo.get("launcher");
 
         // Set initial position
@@ -134,6 +135,13 @@ public class MainRobot extends LinearOpMode {
                 claw.setPosition(0);
             } else if (gamepad2.y) { //close
                 claw.setPosition(.25);
+            }
+
+            //added
+            if (gamepad1.a) { //open
+                small_lift.setPosition(.75);
+            } else if (gamepad1.y) { //close
+                small_lift.setPosition(.3);
             }
 
             //Launcher Control
