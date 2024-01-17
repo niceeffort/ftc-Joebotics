@@ -16,7 +16,7 @@ public class MainRobot extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         boolean fieldCentric = false;
-        double MAX_ARM_POWER =.5;
+        double MAX_ARM_POWER = .5;
         boolean back_pressed = false;
 
 
@@ -27,13 +27,18 @@ public class MainRobot extends LinearOpMode {
         DcMotor ft_lt = hardwareMap.dcMotor.get("ft_lt");
         DcMotor arm = hardwareMap.dcMotor.get("arm");
         DcMotor winch = hardwareMap.dcMotor.get("winch");
+        DcMotor winch2 = hardwareMap.dcMotor.get("winch2");
         Servo claw = hardwareMap.servo.get("claw");
-        //added
         Servo small_lift = hardwareMap.servo.get("small_lift");
+        Servo launcher = hardwareMap.servo.get("launcher");
 
+        // Set initial position
+        launcher.setPosition(0);
 
         // Setting the brake behavior for winch and arm
         winch.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        winch2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        winch2.setDirection(DcMotorSimple.Direction.REVERSE);
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // These may be robot dependant
@@ -143,18 +148,32 @@ public class MainRobot extends LinearOpMode {
                 small_lift.setPosition(.3);
             }
 
+            //Launcher Control
+            if (gamepad2.b) {
+                if (gamepad2.dpad_right) {
+                    launcher.setPosition(.5);
+                } else if (gamepad2.dpad_left) {
+                    launcher.setPosition(0);
+                }
+            }
+
             // Winch control
             if (gamepad2.b) {
                 if (gamepad2.dpad_up) {
                     winch.setPower(1.0);
+                    winch2.setPower(1.0);
                 } else if (gamepad2.dpad_down) {
                     winch.setPower(-1.0);
+                    winch2.setPower(-1.0);
                 } else {
                     winch.setPower(0.0);
+                    winch2.setPower(0.0);
                 }
             } else {
                 winch.setPower(0.0);
+                winch2.setPower(0.0);
             }
+
             telemetry.addData("Field Centric", fieldCentric);
             telemetry.addData("Heading (degrees)", " %.1f", botHeading * 180.0 / Math.PI);
             telemetry.addData("Left Stick X", left_stick_x);
