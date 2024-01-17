@@ -17,6 +17,7 @@ public class AutonomusBackstage extends LinearOpMode {
         ft_lt.setDirection(DcMotor.Direction.REVERSE);
 
         double power = .5;
+        double backward_power = -.5;
         boolean done = false;
         waitForStart();
 
@@ -26,7 +27,14 @@ public class AutonomusBackstage extends LinearOpMode {
            ft_rt.setPower(power);
            ft_lt.setPower(power);
 
-           sleep(1000);
+           sleep(1600);
+
+            bk_rt.setPower(backward_power);
+            bk_lt.setPower(backward_power);
+            ft_rt.setPower(backward_power);
+            ft_lt.setPower(backward_power);
+
+            sleep(200);
            done = true;
         }
 
