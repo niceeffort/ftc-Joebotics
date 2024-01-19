@@ -4,6 +4,7 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -18,7 +19,7 @@ public class Drive extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         boolean fieldCentric = false;
-        double powerFactor = 1.0;
+        double powerFactor = 0.75;
         boolean lowPowerMode = false;
         boolean aButtonPress = false;
         boolean button_2bPressed = false;
@@ -31,6 +32,7 @@ public class Drive extends LinearOpMode {
         DcMotor bk_rt = hardwareMap.dcMotor.get("back_right_motor");
         DcMotor arm_rt = hardwareMap.dcMotor.get("arm_rt");
         DcMotor arm_lt = hardwareMap.dcMotor.get("arm_lt");
+        DcMotor hanging = hardwareMap.dcMotor.get("hanging");
         //DcMotor rotator = hardwareMap.dcMotor.get("rotator");
         Servo claw = hardwareMap.servo.get("claw");
         //Servo arm_lift = hardwareMap.servo.get("arm_lift");
@@ -69,14 +71,17 @@ public class Drive extends LinearOpMode {
 
         arm_rt.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         arm_lt.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        hanging.setMode((DcMotor.RunMode.STOP_AND_RESET_ENCODER));
 
         arm_rt.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         arm_lt.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        hanging.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
 
         arm_lt.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         arm_rt.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        hanging.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
         telemetry.addData("Press Start When Ready","");
@@ -112,6 +117,13 @@ public class Drive extends LinearOpMode {
            else if (button_2y == true && button_2a == false){
                claw.setPosition(0.9);
                telemetry.addLine("closing claw");
+           }
+
+           //hanging
+
+           if (button_1b == true){
+               //hanging.setDirection(DcMotorSimple.Direction.REVERSE);
+               hanging.setPower(1);
            }
 
 
@@ -160,7 +172,7 @@ public class Drive extends LinearOpMode {
             } else if (button_2x == true){
                 rotator.setPosition(0.22);
             } else if (bumper_right == true){
-                rotator.setPosition(0.99);
+                rotator.setPosition(1);
             }
 
 
