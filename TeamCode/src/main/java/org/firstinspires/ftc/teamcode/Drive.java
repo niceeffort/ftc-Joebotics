@@ -125,6 +125,9 @@ public class Drive extends LinearOpMode {
                //hanging.setDirection(DcMotorSimple.Direction.REVERSE);
                hanging.setPower(1);
            }
+           else if (button_1x == true){
+               hanging.setPower(0);
+           }
 
 
 
