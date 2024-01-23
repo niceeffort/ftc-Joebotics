@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 @Autonomous(name = "AutonomusBackstage")
 public class AutonomusBackstage extends LinearOpMode {
 
@@ -13,6 +14,7 @@ public class AutonomusBackstage extends LinearOpMode {
         DcMotor bk_lt = hardwareMap.dcMotor.get("bk_lt");
         DcMotor ft_rt = hardwareMap.dcMotor.get("ft_rt");
         DcMotor ft_lt = hardwareMap.dcMotor.get("ft_lt");
+        Servo claw = hardwareMap.servo.get("claw");
         bk_lt.setDirection(DcMotor.Direction.REVERSE);
         ft_lt.setDirection(DcMotor.Direction.REVERSE);
 
@@ -22,6 +24,8 @@ public class AutonomusBackstage extends LinearOpMode {
         waitForStart();
 
         while(opModeIsActive() && !done){
+
+           //sleep(15000);
            bk_rt.setPower(power);
            bk_lt.setPower(power);
            ft_rt.setPower(power);
@@ -29,19 +33,16 @@ public class AutonomusBackstage extends LinearOpMode {
 
            sleep(1600);
 
-            bk_rt.setPower(backward_power);
-            bk_lt.setPower(backward_power);
-            ft_rt.setPower(backward_power);
-            ft_lt.setPower(backward_power);
-
-            sleep(200);
            done = true;
+
         }
 
         bk_rt.setPower(0);
         bk_lt.setPower(0);
         ft_rt.setPower(0);
         ft_lt.setPower(0);
+
+        claw.setPosition(1);
 
     }
 }
