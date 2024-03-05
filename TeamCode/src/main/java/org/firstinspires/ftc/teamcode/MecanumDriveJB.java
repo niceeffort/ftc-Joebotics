@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
-public class MecanumDrive {
+public class MecanumDriveJB {
     boolean fieldCentric = true;
     LinearOpMode myOpMode;
     HardwareMap hardwareMap;
@@ -22,7 +22,7 @@ public class MecanumDrive {
     IMU imu;
     Telemetry telemetry;
 
-    public MecanumDrive(LinearOpMode opMode){
+    public MecanumDriveJB(LinearOpMode opMode){
         myOpMode = opMode;
         hardwareMap = myOpMode.hardwareMap;
         gamepad1 = myOpMode.gamepad1;
