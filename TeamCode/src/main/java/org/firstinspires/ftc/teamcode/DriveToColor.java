@@ -5,12 +5,12 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 @Autonomous(name = "DriveToColor")
 public class DriveToColor extends LinearOpMode {
-    MecanumDrive myDrive = null;
+    MecanumDriveJB myDrive = null;
     ColorSensorJB colorSensor;
     boolean color_found = false;
     @Override
     public void runOpMode() throws InterruptedException {
-        myDrive = new MecanumDrive(this);
+        myDrive = new MecanumDriveJB(this);
         colorSensor = new ColorSensorJB(this);
 
         waitForStart();
