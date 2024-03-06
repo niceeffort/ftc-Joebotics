@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -32,10 +33,10 @@ public class MecanumDriveJB {
 
     private void Initialize(){
         // Get the motors
-        bk_lt = hardwareMap.dcMotor.get("bk_lt");
-        ft_lt = hardwareMap.dcMotor.get("ft_lt");
-        ft_rt = hardwareMap.dcMotor.get("ft_rt");
-        bk_rt = hardwareMap.dcMotor.get("bk_rt");
+        bk_lt = hardwareMap.dcMotor.get("leftBack");
+        ft_lt = hardwareMap.dcMotor.get("leftFront");
+        ft_rt = hardwareMap.dcMotor.get("rightFront");
+        bk_rt = hardwareMap.dcMotor.get("rightBack");
 
         // These may be robot dependant
         bk_lt.setDirection(DcMotor.Direction.REVERSE);
