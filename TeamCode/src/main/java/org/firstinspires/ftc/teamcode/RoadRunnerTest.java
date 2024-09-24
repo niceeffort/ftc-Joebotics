@@ -19,6 +19,7 @@ public class RoadRunnerTest extends LinearOpMode {
         Actions.runBlocking(
                 drive.actionBuilder(beginPose)
                         .lineToX(10.0)
+                        .turn(Math.toRadians(90))
                         .build());
     }
 }

@@ -65,10 +65,12 @@ public final class MecanumDrive {
         // drive model parameters
         public double inPerTick = .023;
         public double lateralInPerTick = .025;
-        public double trackWidthTicks = 1203.9855;
+        //public double trackWidthTicks = 1203.9855;
+        public double trackWidthTicks = 1188.2417545396554; //Value from Angular Ramp Regression
 
         // feedforward parameters (in tick units)
-        public double kS = 0.94315835;
+        //public double kS = 0.94315835;
+        public double kS = 0.7365954867022717; //Value from Angular Ramp Regression
         public double kV = 0.00441124;
         public double kA = 0;
 
@@ -82,12 +84,12 @@ public final class MecanumDrive {
         public double maxAngAccel = Math.PI;
 
         // path controller gains
-        public double axialGain = 0.0;
-        public double lateralGain = 0.0;
-        public double headingGain = 0.0; // shared with turn
+        public double axialGain = 4.0;
+        public double lateralGain = 2.0;
+        public double headingGain = 4.5; // shared with turn
 
-        public double axialVelGain = 0.0;
-        public double lateralVelGain = 0.0;
+        public double axialVelGain = 0.5;
+        public double lateralVelGain = 1.0;
         public double headingVelGain = 0.0; // shared with turn
     }
 
