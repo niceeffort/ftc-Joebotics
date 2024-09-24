@@ -20,6 +20,12 @@ public class RoadRunnerTest extends LinearOpMode {
                 drive.actionBuilder(beginPose)
                         .lineToX(10.0)
                         .turn(Math.toRadians(90))
+                        .lineToY(10.0)
+                        .turn(Math.toRadians(90))
+                        .lineToX(0.0)
+                        .turn(Math.toRadians(90))
+                        .lineToY(0.0)
+                        .turn(Math.toRadians(90))
                         .build());
     }
 }
