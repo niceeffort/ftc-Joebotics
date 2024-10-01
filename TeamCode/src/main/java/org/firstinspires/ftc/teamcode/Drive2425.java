@@ -26,6 +26,9 @@ public class Drive2425 extends LinearOpMode{
         DcMotor ft_lt = hardwareMap.dcMotor.get("front_left_motor");
         DcMotor ft_rt = hardwareMap.dcMotor.get("front_right_motor");
         DcMotor bk_rt = hardwareMap.dcMotor.get("back_right_motor");
+        DcMotor lwr_arm_left = hardwareMap.dcMotor.get("lwr_arm_left");
+        DcMotor lwr_arm_right = hardwareMap.dcMotor.get("lwr_arm_right");
+        DcMotor upr_arm = hardwareMap.dcMotor.get("upr_arm");
 
         // This part may be robot dependant
         bk_lt.setDirection(DcMotor.Direction.REVERSE);
@@ -47,6 +50,8 @@ public class Drive2425 extends LinearOpMode{
             double left_stick_x = gamepad1.left_stick_x;
             double left_stick_y = -gamepad1.left_stick_y;
             double triggers = gamepad1.left_trigger - gamepad1.right_trigger;
+            boolean dpad_up = gamepad1.dpad_up;
+            boolean dpad_down = gamepad1.dpad_down;
 
 
             // Setting motor power
@@ -55,6 +60,18 @@ public class Drive2425 extends LinearOpMode{
             double ft_lt_power = left_stick_x + left_stick_y - triggers;
             double ft_rt_power = -left_stick_x + left_stick_y + triggers;
             double bk_rt_power = left_stick_x + left_stick_y + triggers;
+
+            // arm movement
+            if (dpad_up) {
+                lwr_arm_left.setPower(0.5);
+                lwr_arm_right.setPower(0.5);
+            } else if (dpad_down) {
+                lwr_arm_left.setPower(-0.5);
+                lwr_arm_right.setPower(-0.5);
+            } else {
+                lwr_arm_left.setPower(0);
+                lwr_arm_right.setPower(0);
+            }
 
             // I have seen two ways to get this information. The latter looks less error prone
             //double botHeading = imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle;
