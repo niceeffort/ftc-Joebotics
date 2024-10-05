@@ -5,14 +5,13 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.IMU;
 
-import org.checkerframework.checker.units.qual.A;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
-@TeleOp(name = "Drive2425")
-public class Drive2425 extends LinearOpMode{
+@TeleOp(name = "DriveW2425")
+public class DriveW2425 extends LinearOpMode{
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -29,6 +28,7 @@ public class Drive2425 extends LinearOpMode{
         DcMotor lwr_arm_left = hardwareMap.dcMotor.get("lwr_arm_left");
         DcMotor lwr_arm_right = hardwareMap.dcMotor.get("lwr_arm_right");
         DcMotor upr_arm = hardwareMap.dcMotor.get("upr_arm");
+        Servo claw = hardwareMap.servo.get("claw");
 
         // This part may be robot dependant
         bk_lt.setDirection(DcMotor.Direction.REVERSE);
@@ -52,6 +52,8 @@ public class Drive2425 extends LinearOpMode{
             double triggers = gamepad1.left_trigger - gamepad1.right_trigger;
             boolean dpad_up = gamepad1.dpad_up;
             boolean dpad_down = gamepad1.dpad_down;
+            boolean dpad_left = gamepad1.dpad_left;
+            boolean dpad_right = gamepad1.dpad_right;
 
 
             // Setting motor power
@@ -65,12 +67,24 @@ public class Drive2425 extends LinearOpMode{
             if (dpad_up) {
                 lwr_arm_left.setPower(0.5);
                 lwr_arm_right.setPower(0.5);
+                upr_arm.setPower(0.5);
             } else if (dpad_down) {
                 lwr_arm_left.setPower(-0.5);
                 lwr_arm_right.setPower(-0.5);
+                upr_arm.setPower(-0.5);
             } else {
                 lwr_arm_left.setPower(0);
                 lwr_arm_right.setPower(0);
+                upr_arm.setPower(0);
+            }
+
+            // claw movement
+            if (dpad_left) {
+                claw.setPosition(0.6);
+            } else if (dpad_right) {
+                claw.setPosition(0.2);
+            } else {
+                claw.setPosition(0);
             }
 
             // I have seen two ways to get this information. The latter looks less error prone
