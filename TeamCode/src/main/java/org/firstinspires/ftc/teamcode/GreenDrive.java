@@ -8,11 +8,10 @@ import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
-@TeleOp(name = "DriveG2425")
-public class DriveG2425 extends LinearOpMode{
+@TeleOp(name = "GreenDrive")
+public class GreenDrive extends LinearOpMode{
     @Override
     public void runOpMode() throws InterruptedException {
-
         boolean fieldCentric = false;
         double powerFactor = 0.75;
         boolean lowPowerMode = false;
@@ -24,22 +23,17 @@ public class DriveG2425 extends LinearOpMode{
         DcMotor ft_rt = hardwareMap.dcMotor.get("front_right_motor");
         DcMotor bk_rt = hardwareMap.dcMotor.get("back_right_motor");
         DcMotor arm = hardwareMap.dcMotor.get("arm");
-        Servo armTwo = hardwareMap.servo.get("arm2");
-        Servo armThree = hardwareMap.servo.get("arm3");
+        Servo claw = hardwareMap.servo.get("claw");
 
         // This part may be robot dependant
         bk_lt.setDirection(DcMotor.Direction.REVERSE);
         ft_lt.setDirection(DcMotor.Direction.REVERSE);
 
-        // The IMU will be used to capture the heading for field centric driving
+        // The IMU will be used for field centric driving
         IMU imu = hardwareMap.get(IMU.class, "imu");
-
-        // Set this to match your robot
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                 RevHubOrientationOnRobot.LogoFacingDirection.FORWARD,
                 RevHubOrientationOnRobot.UsbFacingDirection.UP));
-
-        // Without this, the REV Hub's orientation is assumed to be logo up / USB forward
         imu.initialize(parameters);
 
         waitForStart();
@@ -48,32 +42,33 @@ public class DriveG2425 extends LinearOpMode{
             double left_stick_y = -gamepad1.left_stick_y;
             double triggers = gamepad1.left_trigger - gamepad1.right_trigger;
             boolean dpad_up = gamepad1.dpad_up;
-            boolean dpad_down = gamepad1.dpad_down;
+            boolean a = gamepad1.a;
+            boolean b = gamepad1.b;
 
 
-            // Setting motor power
+            //Motor power!
             if (Math.abs(triggers) < 0.05) triggers = 0;
             double bk_lt_power = -left_stick_x + left_stick_y - triggers;
             double ft_lt_power = left_stick_x + left_stick_y - triggers;
             double ft_rt_power = -left_stick_x + left_stick_y + triggers;
             double bk_rt_power = left_stick_x + left_stick_y + triggers;
 
-            // arm movement
+            //Arm code
             if (dpad_up) {
-                arm.setPower(0.5);
-                armTwo.setPosition(0.5);
-                armThree.setPosition(0.5);
-            } else if (dpad_down) {
-                arm.setPower(-0.5);
-                armTwo.setPosition(-0.5);
-                armThree.setPosition(-0.5);
+                arm.setPower((0.5));
             } else {
                 arm.setPower(0.0);
-                armTwo.setPosition(0.0);
-                armThree.setPosition(0.0);
             }
 
-            // I have seen two ways to get this information. The latter looks less error prone
+            //Claw code
+            if (a) {
+                claw.setPosition(0.5);
+            } else if (b) {
+                claw.setPosition(-0.5);
+            } else {
+                claw.setPosition(0.0);
+            }
+
             //double botHeading = imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle;
             double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
 
