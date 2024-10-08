@@ -1,6 +1,7 @@
 package com.example.meepmeeptesting;
 
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.noahbres.meepmeep.MeepMeep;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
@@ -20,15 +21,27 @@ public class MeepMeepTesting {
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .build();
 
-        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(0, 0, 0))
-                .lineToX(30)
-                .turn(Math.toRadians(90))
-                .lineToY(30)
-                .turn(Math.toRadians(90))
-                .lineToX(0)
-                .turn(Math.toRadians(90))
-                .lineToY(0)
-                .turn(Math.toRadians(90))
+        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(35, 60, 0))
+                .waitSeconds(1)
+                .setTangent(0)
+                .splineTo(new Vector2d(0, 35), Math.toRadians(270))
+                .waitSeconds(.5)
+                .lineToY(50)
+                .turnTo(0)
+               // .strafeToConstantHeading(new Vector2d(35, 25))
+                .splineTo(new Vector2d(35, 25), Math.toRadians(0))
+                .waitSeconds(.5)
+                .strafeToConstantHeading(new Vector2d(35, 60))
+                .waitSeconds(.5)
+                .strafeToConstantHeading(new Vector2d(48, 25))
+                .waitSeconds(.5)
+                .strafeToConstantHeading(new Vector2d(35, 60))
+                .waitSeconds(.5)
+                .strafeToConstantHeading(new Vector2d(61, 25))
+                .waitSeconds(.5)
+                .strafeToConstantHeading(new Vector2d(61, 60))
+
+
                 .build());
 
         Image img = null;
