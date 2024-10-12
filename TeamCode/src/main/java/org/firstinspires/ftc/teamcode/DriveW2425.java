@@ -50,10 +50,12 @@ public class DriveW2425 extends LinearOpMode{
             double left_stick_x = gamepad1.left_stick_x;
             double left_stick_y = -gamepad1.left_stick_y;
             double triggers = gamepad1.left_trigger - gamepad1.right_trigger;
-            boolean dpad_up = gamepad1.dpad_up;
-            boolean dpad_down = gamepad1.dpad_down;
-            boolean dpad_left = gamepad1.dpad_left;
-            boolean dpad_right = gamepad1.dpad_right;
+            boolean dpad_up = gamepad2.dpad_up;
+            boolean dpad_down = gamepad2.dpad_down;
+            boolean dpad_left = gamepad2.dpad_left;
+            boolean dpad_right = gamepad2.dpad_right;
+            boolean buttonA = gamepad2.a;
+            boolean buttonB = gamepad2.b;
 
 
             // Setting motor power
@@ -63,19 +65,25 @@ public class DriveW2425 extends LinearOpMode{
             double ft_rt_power = -left_stick_x + left_stick_y + triggers;
             double bk_rt_power = left_stick_x + left_stick_y + triggers;
 
-            // arm movement
+            // upper arm movement
             if (dpad_up) {
-                lwr_arm_left.setPower(0.5);
-                lwr_arm_right.setPower(0.5);
                 upr_arm.setPower(0.5);
             } else if (dpad_down) {
+                upr_arm.setPower(-0.5);
+            } else {
+                upr_arm.setPower(0);
+            }
+
+            // lower arm movement
+            if (buttonA) {
+                lwr_arm_left.setPower(0.5);
+                lwr_arm_right.setPower(0.5);
+            } else if (buttonB) {
                 lwr_arm_left.setPower(-0.5);
                 lwr_arm_right.setPower(-0.5);
-                upr_arm.setPower(-0.5);
             } else {
                 lwr_arm_left.setPower(0);
                 lwr_arm_right.setPower(0);
-                upr_arm.setPower(0);
             }
 
             // claw movement
@@ -83,8 +91,6 @@ public class DriveW2425 extends LinearOpMode{
                 claw.setPosition(0.6);
             } else if (dpad_right) {
                 claw.setPosition(0.2);
-            } else {
-                claw.setPosition(0);
             }
 
             // I have seen two ways to get this information. The latter looks less error prone
