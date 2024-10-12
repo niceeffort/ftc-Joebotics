@@ -35,8 +35,13 @@ public class outreach extends LinearOpMode {
         waitForStart();
 
         while(opModeIsActive()){
-            bk_lt.setPower(-gamepad1.left_stick_y);
-            bk_rt.setPower(-gamepad1.right_stick_y);
+
+            //bk_lt.setPower(-gamepad1.left_stick_y);
+            //bk_rt.setPower(-gamepad1.right_stick_y);
+
+            double leftstick_y = gamepad1.left_stick_y;
+            bk_lt.setPower(leftstick_y * .5);
+            bk_rt.setPower(leftstick_y * .5);
 
             if(gamepad1.a){
                 launcher.setPower(1.0);
