@@ -24,10 +24,15 @@ public class GreenDrive extends LinearOpMode{
         DcMotor bk_rt = hardwareMap.dcMotor.get("back_right_motor");
         DcMotor arm = hardwareMap.dcMotor.get("arm");
         Servo claw = hardwareMap.servo.get("claw");
+        DcMotor riser = hardwareMap.dcMotor.get("riser");
 
         // This part may be robot dependant
         bk_lt.setDirection(DcMotor.Direction.REVERSE);
         ft_lt.setDirection(DcMotor.Direction.REVERSE);
+
+        //Set arm brake behavior
+        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        riser.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // The IMU will be used for field centric driving
         IMU imu = hardwareMap.get(IMU.class, "imu");
@@ -42,8 +47,11 @@ public class GreenDrive extends LinearOpMode{
             double left_stick_y = -gamepad1.left_stick_y;
             double triggers = gamepad1.left_trigger - gamepad1.right_trigger;
             boolean dpad_up = gamepad1.dpad_up;
+            boolean dpad_down = gamepad1.dpad_down;
+            boolean dpad_left = gamepad1.dpad_left;
+            boolean dpad_right = gamepad1.dpad_right;
             boolean a = gamepad1.a;
-            boolean b = gamepad1.b;
+            boolean y = gamepad1.y;
 
 
             //Motor power!
@@ -53,20 +61,29 @@ public class GreenDrive extends LinearOpMode{
             double ft_rt_power = -left_stick_x + left_stick_y + triggers;
             double bk_rt_power = left_stick_x + left_stick_y + triggers;
 
-            //Arm code
+            //Riser code
             if (dpad_up) {
-                arm.setPower((0.5));
+                riser.setPower((-1));
+            } else if (dpad_down) {
+                riser.setPower(1);
             } else {
-                arm.setPower(0.0);
+                riser.setPower(0);
+            }
+
+            //Arm code
+            if (dpad_right) {
+                arm.setPower((1));
+            } else if (dpad_left) {
+                arm.setPower(-1);
+            } else {
+                arm.setPower(0);
             }
 
             //Claw code
             if (a) {
-                claw.setPosition(0.5);
-            } else if (b) {
-                claw.setPosition(-0.5);
-            } else {
-                claw.setPosition(0.0);
+                claw.setPosition(0);
+            } else if (y) {
+                claw.setPosition(1);
             }
 
             //double botHeading = imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle;
