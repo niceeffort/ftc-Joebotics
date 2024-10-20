@@ -4,14 +4,14 @@ import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
-import com.acmerobotics.roadrunner.Actions;
+import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 class Claw {
-    private Servo clawServo;
+    private final Servo clawServo;
 
     public Claw(HardwareMap hardwareMap){
         clawServo = hardwareMap.get(Servo.class, "claw");
@@ -39,7 +39,6 @@ public class ClawActionTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException{
         Claw clawAction = new Claw(hardwareMap);
-
         waitForStart();
         Actions.runBlocking(clawAction.open());
     }
