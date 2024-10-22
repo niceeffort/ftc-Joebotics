@@ -46,12 +46,10 @@ public class GreenDrive extends LinearOpMode{
             double left_stick_x = gamepad1.left_stick_x;
             double left_stick_y = -gamepad1.left_stick_y;
             double triggers = gamepad1.left_trigger - gamepad1.right_trigger;
-            boolean dpad_up = gamepad1.dpad_up;
-            boolean dpad_down = gamepad1.dpad_down;
-            boolean dpad_left = gamepad1.dpad_left;
-            boolean dpad_right = gamepad1.dpad_right;
-            boolean a = gamepad1.a;
-            boolean y = gamepad1.y;
+            double armPower = gamepad2.left_stick_y;
+            boolean closeClaw = gamepad2.a;
+            boolean openClaw = gamepad2.y;
+            double riserPower = gamepad2.right_trigger - gamepad2.left_trigger;
 
 
             //Motor power!
@@ -62,29 +60,21 @@ public class GreenDrive extends LinearOpMode{
             double bk_rt_power = left_stick_x + left_stick_y + triggers;
 
             //Riser code
-            if (dpad_up) {
-                riser.setPower((-1));
-            } else if (dpad_down) {
-                riser.setPower(1);
-            } else {
-                riser.setPower(0);
-            }
+            riser.setPower(riserPower);
 
             //Arm code
-            if (dpad_right) {
-                arm.setPower((1));
-            } else if (dpad_left) {
-                arm.setPower(-1);
-            } else {
-                arm.setPower(0);
-            }
+            arm.setPower(armPower);
 
             //Claw code
-            if (a) {
-                claw.setPosition(0);
-            } else if (y) {
+            if (closeClaw) {
+                claw.setPosition(.6);
+            } else if (openClaw) {
                 claw.setPosition(1);
             }
+
+            //Print claw position
+            telemetry.addData("Claw position", claw.getPosition());
+            telemetry.update();
 
             //double botHeading = imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle;
             double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
