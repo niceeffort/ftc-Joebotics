@@ -54,7 +54,7 @@ public class DriveW2425 extends LinearOpMode{
             boolean dpad_down = gamepad2.dpad_down;
             boolean dpad_left = gamepad2.dpad_left;
             boolean dpad_right = gamepad2.dpad_right;
-            boolean buttonA = gamepad2.a;
+            boolean buttonY = gamepad2.y;
             boolean buttonB = gamepad2.b;
 
 
@@ -75,7 +75,7 @@ public class DriveW2425 extends LinearOpMode{
             }
 
             // lower arm movement
-            if (buttonA) {
+            if (buttonY) {
                 lwr_arm_left.setPower(0.5);
                 lwr_arm_right.setPower(0.5);
             } else if (buttonB) {
