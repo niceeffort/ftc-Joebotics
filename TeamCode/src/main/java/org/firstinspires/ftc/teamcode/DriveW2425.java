@@ -29,10 +29,12 @@ public class DriveW2425 extends LinearOpMode{
         DcMotor lwr_arm_right = hardwareMap.dcMotor.get("lwr_arm_right");
         DcMotor upr_arm = hardwareMap.dcMotor.get("upr_arm");
         Servo claw = hardwareMap.servo.get("claw");
+        Servo wrist = hardwareMap.servo.get("wrist");
 
         // This part may be robot dependant
         bk_lt.setDirection(DcMotor.Direction.REVERSE);
         ft_lt.setDirection(DcMotor.Direction.REVERSE);
+        lwr_arm_right.setDirection((DcMotorSimple.Direction.REVERSE));
 
         // The IMU will be used to capture the heading for field centric driving
         IMU imu = hardwareMap.get(IMU.class, "imu");
@@ -55,6 +57,8 @@ public class DriveW2425 extends LinearOpMode{
             boolean dpad_left = gamepad2.dpad_left;
             boolean dpad_right = gamepad2.dpad_right;
             boolean buttonY = gamepad2.y;
+            boolean buttonA = gamepad2.a;
+            boolean buttonX = gamepad2.x;
             boolean buttonB = gamepad2.b;
 
 
@@ -78,7 +82,7 @@ public class DriveW2425 extends LinearOpMode{
             if (buttonY) {
                 lwr_arm_left.setPower(0.5);
                 lwr_arm_right.setPower(0.5);
-            } else if (buttonB) {
+            } else if (buttonA) {
                 lwr_arm_left.setPower(-0.5);
                 lwr_arm_right.setPower(-0.5);
             } else {
@@ -91,6 +95,13 @@ public class DriveW2425 extends LinearOpMode{
                 claw.setPosition(0.6);
             } else if (dpad_right) {
                 claw.setPosition(0.2);
+            }
+
+            //wrist
+            if (buttonB) {
+                wrist.setPosition(0.6);
+            } else if (buttonX) {
+                wrist.setPosition(0);
             }
 
             // I have seen two ways to get this information. The latter looks less error prone
