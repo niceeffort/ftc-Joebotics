@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -28,13 +29,18 @@ public class DriveW2425 extends LinearOpMode{
         DcMotor lwr_arm_left = hardwareMap.dcMotor.get("lwr_arm_left");
         DcMotor lwr_arm_right = hardwareMap.dcMotor.get("lwr_arm_right");
         DcMotor upr_arm = hardwareMap.dcMotor.get("upr_arm");
-        Servo claw = hardwareMap.servo.get("claw");
-        Servo wrist = hardwareMap.servo.get("wrist");
+        //Servo claw = hardwareMap.servo.get("claw");
+        //Servo wrist = hardwareMap.servo.get("wrist");
+        CRServo claw = hardwareMap.get(CRServo.class, "claw");
+        CRServo wrist = hardwareMap.get(CRServo.class, "wrist");
 
         // This part may be robot dependant
         bk_lt.setDirection(DcMotor.Direction.REVERSE);
         ft_lt.setDirection(DcMotor.Direction.REVERSE);
         lwr_arm_right.setDirection((DcMotorSimple.Direction.REVERSE));
+        lwr_arm_right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        lwr_arm_left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        upr_arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // The IMU will be used to capture the heading for field centric driving
         IMU imu = hardwareMap.get(IMU.class, "imu");
@@ -80,8 +86,8 @@ public class DriveW2425 extends LinearOpMode{
 
             // lower arm movement
             if (buttonY) {
-                lwr_arm_left.setPower(0.5);
-                lwr_arm_right.setPower(0.5);
+                lwr_arm_left.setPower(0.75);
+                lwr_arm_right.setPower(0.75);
             } else if (buttonA) {
                 lwr_arm_left.setPower(-0.5);
                 lwr_arm_right.setPower(-0.5);
@@ -92,16 +98,24 @@ public class DriveW2425 extends LinearOpMode{
 
             // claw movement
             if (dpad_left) {
-                claw.setPosition(0.6);
+                //claw.setPosition(0.6);
+                claw.setPower(0.2);
             } else if (dpad_right) {
-                claw.setPosition(0.2);
+                //claw.setPosition(0);
+                claw.setPower(-0.2);
+            } else {
+                claw.setPower(0);
             }
 
             //wrist
             if (buttonB) {
-                wrist.setPosition(0.6);
+                //wrist.setPosition(0.6);
+                wrist.setPower(0.2);
             } else if (buttonX) {
-                wrist.setPosition(0);
+                //wrist.setPosition(0);
+                wrist.setPower(-0.2);
+            } else {
+                wrist.setPower(0);
             }
 
             // I have seen two ways to get this information. The latter looks less error prone
