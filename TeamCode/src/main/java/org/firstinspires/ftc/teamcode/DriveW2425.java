@@ -29,10 +29,10 @@ public class DriveW2425 extends LinearOpMode{
         DcMotor lwr_arm_left = hardwareMap.dcMotor.get("lwr_arm_left");
         DcMotor lwr_arm_right = hardwareMap.dcMotor.get("lwr_arm_right");
         DcMotor upr_arm = hardwareMap.dcMotor.get("upr_arm");
-        //Servo claw = hardwareMap.servo.get("claw");
-        //Servo wrist = hardwareMap.servo.get("wrist");
-        CRServo claw = hardwareMap.get(CRServo.class, "claw");
-        CRServo wrist = hardwareMap.get(CRServo.class, "wrist");
+        Servo claw = hardwareMap.servo.get("claw");
+        Servo wrist = hardwareMap.servo.get("wrist");
+        //CRServo claw = hardwareMap.get(CRServo.class, "claw");
+        //CRServo wrist = hardwareMap.get(CRServo.class, "wrist");
 
         // This part may be robot dependant
         bk_lt.setDirection(DcMotor.Direction.REVERSE);
@@ -98,24 +98,24 @@ public class DriveW2425 extends LinearOpMode{
 
             // claw movement
             if (dpad_left) {
-                //claw.setPosition(0.6);
-                claw.setPower(0.2);
+                claw.setPosition(0.8);
+                //claw.setPower(0.2);
             } else if (dpad_right) {
-                //claw.setPosition(0);
-                claw.setPower(-0.2);
+                claw.setPosition(0.2);
+                //claw.setPower(-0.2);
             } else {
-                claw.setPower(0);
+               // claw.setPower(0);
             }
 
             //wrist
             if (buttonB) {
-                //wrist.setPosition(0.6);
-                wrist.setPower(0.2);
+                wrist.setPosition(0.6);
+                //wrist.setPower(0.2);
             } else if (buttonX) {
-                //wrist.setPosition(0);
-                wrist.setPower(-0.2);
+                wrist.setPosition(0);
+                //wrist.setPower(-0.2);
             } else {
-                wrist.setPower(0);
+                //wrist.setPower(0);
             }
 
             // I have seen two ways to get this information. The latter looks less error prone
