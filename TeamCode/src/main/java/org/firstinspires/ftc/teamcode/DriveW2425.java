@@ -13,8 +13,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 @TeleOp(name = "DriveW2425")
 public class DriveW2425 extends LinearOpMode{
+    WhiteMecanumDrive myDrive = null;
     @Override
     public void runOpMode() throws InterruptedException {
+
+        myDrive = new WhiteMecanumDrive(this);
 
         boolean fieldCentric = false;
         double powerFactor = 0.75;
@@ -55,6 +58,10 @@ public class DriveW2425 extends LinearOpMode{
 
         waitForStart();
         while (opModeIsActive()) {
+
+            myDrive.Update(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.left_trigger, gamepad1.right_trigger);
+
+
             /*double left_stick_x = gamepad1.left_stick_x;
             double left_stick_y = -gamepad1.left_stick_y;
             double triggers = gamepad1.left_trigger - gamepad1.right_trigger; */
