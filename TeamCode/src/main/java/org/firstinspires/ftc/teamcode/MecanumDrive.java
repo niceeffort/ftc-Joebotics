@@ -63,7 +63,7 @@ public final class MecanumDrive {
                 RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD;
 
         // drive model parameters
-        public double inPerTick = .023;
+        public double inPerTick = .091;
         public double lateralInPerTick = .025;
         //public double trackWidthTicks = 1203.9855;
         public double trackWidthTicks = 1188.2417545396554; //Value from Angular Ramp Regression
