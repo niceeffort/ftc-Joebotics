@@ -22,10 +22,10 @@ public class DriveW2425 extends LinearOpMode{
         boolean aButtonPress = false;
 
         // Get the motors
-        DcMotor bk_lt = hardwareMap.dcMotor.get("back_left_motor");
+       /* DcMotor bk_lt = hardwareMap.dcMotor.get("back_left_motor");
         DcMotor ft_lt = hardwareMap.dcMotor.get("front_left_motor");
         DcMotor ft_rt = hardwareMap.dcMotor.get("front_right_motor");
-        DcMotor bk_rt = hardwareMap.dcMotor.get("back_right_motor");
+        DcMotor bk_rt = hardwareMap.dcMotor.get("back_right_motor"); */
         DcMotor lwr_arm_left = hardwareMap.dcMotor.get("lwr_arm_left");
         DcMotor lwr_arm_right = hardwareMap.dcMotor.get("lwr_arm_right");
         DcMotor upr_arm = hardwareMap.dcMotor.get("upr_arm");
@@ -35,14 +35,14 @@ public class DriveW2425 extends LinearOpMode{
         //CRServo wrist = hardwareMap.get(CRServo.class, "wrist");
 
         // This part may be robot dependant
-        bk_lt.setDirection(DcMotor.Direction.REVERSE);
-        ft_lt.setDirection(DcMotor.Direction.REVERSE);
+       /* bk_lt.setDirection(DcMotor.Direction.REVERSE);
+        ft_lt.setDirection(DcMotor.Direction.REVERSE); */
         lwr_arm_right.setDirection((DcMotorSimple.Direction.REVERSE));
         lwr_arm_right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lwr_arm_left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         upr_arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        // The IMU will be used to capture the heading for field centric driving
+      /*  // The IMU will be used to capture the heading for field centric driving
         IMU imu = hardwareMap.get(IMU.class, "imu");
 
         // Set this to match your robot
@@ -51,13 +51,13 @@ public class DriveW2425 extends LinearOpMode{
                 RevHubOrientationOnRobot.UsbFacingDirection.UP));
 
         // Without this, the REV Hub's orientation is assumed to be logo up / USB forward
-        imu.initialize(parameters);
+        imu.initialize(parameters); */
 
         waitForStart();
         while (opModeIsActive()) {
-            double left_stick_x = gamepad1.left_stick_x;
+            /*double left_stick_x = gamepad1.left_stick_x;
             double left_stick_y = -gamepad1.left_stick_y;
-            double triggers = gamepad1.left_trigger - gamepad1.right_trigger;
+            double triggers = gamepad1.left_trigger - gamepad1.right_trigger; */
             boolean dpad_up = gamepad2.dpad_up;
             boolean dpad_down = gamepad2.dpad_down;
             boolean dpad_left = gamepad2.dpad_left;
@@ -68,12 +68,12 @@ public class DriveW2425 extends LinearOpMode{
             boolean buttonB = gamepad2.b;
 
 
-            // Setting motor power
+          /*  // Setting motor power
             if (Math.abs(triggers) < 0.05) triggers = 0;
             double bk_lt_power = -left_stick_x + left_stick_y - triggers;
             double ft_lt_power = left_stick_x + left_stick_y - triggers;
             double ft_rt_power = -left_stick_x + left_stick_y + triggers;
-            double bk_rt_power = left_stick_x + left_stick_y + triggers;
+            double bk_rt_power = left_stick_x + left_stick_y + triggers; */
 
             // upper arm movement
             if (dpad_up) {
@@ -118,7 +118,7 @@ public class DriveW2425 extends LinearOpMode{
                 //wrist.setPower(0);
             }
 
-            // I have seen two ways to get this information. The latter looks less error prone
+           /* // I have seen two ways to get this information. The latter looks less error prone
             //double botHeading = imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle;
             double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
 
@@ -146,7 +146,7 @@ public class DriveW2425 extends LinearOpMode{
             bk_lt_power /= max;
             ft_lt_power /= max;
             ft_rt_power /= max;
-            bk_rt_power /= max;
+            bk_rt_power /= max; */
 
             if (gamepad1.a && !aButtonPress) {
                 aButtonPress = true;
@@ -161,16 +161,16 @@ public class DriveW2425 extends LinearOpMode{
             } else if (!gamepad1.a && aButtonPress) {
                 aButtonPress = false;
             }
-            bk_lt.setPower(bk_lt_power * powerFactor);
+           /* bk_lt.setPower(bk_lt_power * powerFactor);
             ft_lt.setPower(ft_lt_power * powerFactor);
             ft_rt.setPower(ft_rt_power * powerFactor);
-            bk_rt.setPower(bk_rt_power * powerFactor);
+            bk_rt.setPower(bk_rt_power * powerFactor); */
         }
 
-        bk_lt.setPower(0);
+        /* bk_lt.setPower(0);
         ft_lt.setPower(0);
         ft_rt.setPower(0);
-        bk_rt.setPower(0);
+        bk_rt.setPower(0); */
 
     }
 

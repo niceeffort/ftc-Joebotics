@@ -12,7 +12,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 public class WhiteMecanumDrive {
-    boolean fieldCentric = false;
+    boolean fieldCentric = true;
     LinearOpMode myOpMode;
     HardwareMap hardwareMap;
     Gamepad gamepad1;
@@ -36,7 +36,7 @@ public class WhiteMecanumDrive {
         bk_lt = hardwareMap.dcMotor.get("back_left_motor");
         ft_lt = hardwareMap.dcMotor.get("front_left_motor");
         ft_rt = hardwareMap.dcMotor.get("front_right_motor");
-        bk_rt = hardwareMap.dcMotor.get("back_right_motor");
+        bk_rt = hardwareMap.dcMotor.get("back_left_motor");
 
         // These may be robot dependant
         bk_lt.setDirection(DcMotor.Direction.REVERSE);
