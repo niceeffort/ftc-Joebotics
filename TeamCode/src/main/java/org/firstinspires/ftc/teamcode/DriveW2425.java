@@ -77,9 +77,9 @@ public class DriveW2425 extends LinearOpMode{
 
             // upper arm movement
             if (dpad_up) {
-                upr_arm.setPower(0.5);
+                upr_arm.setPower(0.75);
             } else if (dpad_down) {
-                upr_arm.setPower(-0.5);
+                upr_arm.setPower(-0.75);
             } else {
                 upr_arm.setPower(0);
             }
@@ -109,10 +109,10 @@ public class DriveW2425 extends LinearOpMode{
 
             //wrist
             if (buttonB) {
-                wrist.setPosition(0.6);
+                wrist.setPosition(0.8);
                 //wrist.setPower(0.2);
             } else if (buttonX) {
-                wrist.setPosition(0);
+                wrist.setPosition(0.2);
                 //wrist.setPower(-0.2);
             } else {
                 //wrist.setPower(0);
