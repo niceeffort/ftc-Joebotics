@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 
-@Autonomous (name = "SimpleAuto2425")
-public class SimpleAuto2425ObsZone extends LinearOpMode {
+@Autonomous (name = "ObsZone")
+public class ObsZone extends LinearOpMode {
 
     //WhiteMecanumDrive myDrive = null;
 
