@@ -105,14 +105,16 @@ public class DriveW2425 extends LinearOpMode{
 
             // claw movement
             if (dpad_left) {
-                claw.setPosition(0.8);
+                claw.setPosition(1);
+
                 //claw.setPower(0.2);
             } else if (dpad_right) {
-                claw.setPosition(0.2);
+                claw.setPosition(0);
+
                 //claw.setPower(-0.2);
-            } else {
+            } /* else {
                // claw.setPower(0);
-            }
+            } */
 
             //wrist
             if (buttonB) {
@@ -121,9 +123,9 @@ public class DriveW2425 extends LinearOpMode{
             } else if (buttonX) {
                 wrist.setPosition(0.2);
                 //wrist.setPower(-0.2);
-            } else {
+            } /* else {
                 //wrist.setPower(0);
-            }
+            } */
 
            /* // I have seen two ways to get this information. The latter looks less error prone
             //double botHeading = imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle;
