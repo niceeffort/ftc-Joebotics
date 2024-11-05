@@ -27,7 +27,6 @@ public class AscentZone extends LinearOpMode {
         //double power = .5;
         boolean done = false;
         boolean doneForward = false;
-        boolean doneTurn = false;
         boolean doneSide = false;
         waitForStart();
 
@@ -37,33 +36,26 @@ public class AscentZone extends LinearOpMode {
             ft_rt.setPower(0.5);
             ft_lt.setPower(0.5);
 
-            sleep(2000);
+            sleep(1000);
             doneSide = true;
         }
 
-        while(opModeIsActive() && doneSide && !doneTurn && !doneForward && !done){
+
+        while(opModeIsActive() && doneSide && !doneForward){
             bk_rt.setPower(0.5);
+            bk_lt.setPower(-0.5);
+            ft_rt.setPower(-0.5);
             ft_lt.setPower(0.5);
-
-            sleep(500);
-            doneTurn = true;
-        }
-
-        while(opModeIsActive() && doneSide && doneTurn && !doneForward && !done){
-            bk_rt.setPower(-0.5);
-            bk_lt.setPower(0.5);
-            ft_rt.setPower(0.5);
-            ft_lt.setPower(-0.5);
 
             sleep(500);
             doneForward = true;
         }
 
-        while(opModeIsActive() && doneSide && doneTurn && doneForward && !done){
+        while(opModeIsActive() && doneSide && doneForward && !done){
             lwr_arm_left.setPower(0.75);
             lwr_arm_right.setPower(0.75);
 
-            sleep(200);
+            sleep(500);
             done = true;
         }
 
