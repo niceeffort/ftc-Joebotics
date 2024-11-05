@@ -67,8 +67,8 @@ public class DriveW2425 extends LinearOpMode{
             double triggers = gamepad1.left_trigger - gamepad1.right_trigger; */
             boolean dpad_up = gamepad2.dpad_up;
             boolean dpad_down = gamepad2.dpad_down;
-            boolean dpad_left = gamepad2.dpad_left;
-            boolean dpad_right = gamepad2.dpad_right;
+            boolean bumperL = gamepad2.left_bumper;
+            boolean bumperR = gamepad2.right_bumper;
             boolean buttonY = gamepad2.y;
             boolean buttonA = gamepad2.a;
             boolean buttonX = gamepad2.x;
@@ -92,10 +92,10 @@ public class DriveW2425 extends LinearOpMode{
             }
 
             // lower arm movement
-            if (buttonY) {
+            if (buttonA) {
                 lwr_arm_left.setPower(0.75);
                 lwr_arm_right.setPower(0.75);
-            } else if (buttonA) {
+            } else if (buttonY) {
                 lwr_arm_left.setPower(-0.5);
                 lwr_arm_right.setPower(-0.5);
             } else {
@@ -104,11 +104,11 @@ public class DriveW2425 extends LinearOpMode{
             }
 
             // claw movement
-            if (dpad_left) {
+            if (bumperL) {
                 claw.setPosition(1);
 
                 //claw.setPower(0.2);
-            } else if (dpad_right) {
+            } else if (bumperR) {
                 claw.setPosition(0);
 
                 //claw.setPower(-0.2);
