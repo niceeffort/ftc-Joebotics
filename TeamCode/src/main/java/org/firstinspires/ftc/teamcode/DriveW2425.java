@@ -105,7 +105,7 @@ public class DriveW2425 extends LinearOpMode{
 
             // claw movement
             if (bumperL) {
-                claw.setPosition(1);
+                claw.setPosition(0.5);
 
                 //claw.setPower(0.2);
             } else if (bumperR) {
