@@ -7,7 +7,7 @@ import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-class Claw {
+public class Claw {
     private final Servo clawServo;
 
     public enum ClawPosition {OPEN, CLOSE}
