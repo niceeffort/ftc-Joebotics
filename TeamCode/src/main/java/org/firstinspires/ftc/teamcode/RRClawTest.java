@@ -9,10 +9,16 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 public class RRClawTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
+        //Claw
         Claw myClaw = new Claw(hardwareMap);
+        //Riser
+        Riser myRiser = new Riser(hardwareMap);
 
         waitForStart();
 
+
+
+        //Claw
         telemetry.addLine("Starting open");
         telemetry.update();
         Actions.runBlocking(myClaw.setPosition(Claw.ClawPosition.OPEN));
@@ -24,6 +30,20 @@ public class RRClawTest extends LinearOpMode {
         Actions.runBlocking(myClaw.setPosition(Claw.ClawPosition.CLOSE));
         sleep(2000);
         telemetry.addLine("Ending close");
+        telemetry.update();
+
+        //Riser
+        telemetry.addLine("Starting up");
+        telemetry.update();
+        Actions.runBlocking(myRiser.setPosition(Riser.RiserPosition.UP));
+        telemetry.addLine("Ending up");
+        telemetry.update();
+        sleep(2000);
+        telemetry.addLine("Starting down");
+        telemetry.update();
+        Actions.runBlocking(myRiser.setPosition(Riser.RiserPosition.DOWN));
+        sleep(2000);
+        telemetry.addLine("Ending down");
         telemetry.update();
     }
 }
