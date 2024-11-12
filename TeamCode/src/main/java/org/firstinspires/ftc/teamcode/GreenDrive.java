@@ -41,8 +41,6 @@ public class GreenDrive extends LinearOpMode{
                 RevHubOrientationOnRobot.UsbFacingDirection.UP));
         imu.initialize(parameters);
 
-        claw.setPosition(1);
-
         waitForStart();
         while (opModeIsActive()) {
             double left_stick_x = gamepad1.left_stick_x;
@@ -69,7 +67,7 @@ public class GreenDrive extends LinearOpMode{
 
             //Claw code
             if (closeClaw) {
-                claw.setPosition(0);
+                claw.setPosition(0.05);
             } else if (openClaw) {
                 claw.setPosition(.5);
             }
