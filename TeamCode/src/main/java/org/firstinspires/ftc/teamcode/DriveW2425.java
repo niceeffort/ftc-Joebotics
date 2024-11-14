@@ -93,8 +93,8 @@ public class DriveW2425 extends LinearOpMode{
 
             // lower arm movement
             if (buttonA) {
-                lwr_arm_left.setPower(0.75);
-                lwr_arm_right.setPower(0.75);
+                lwr_arm_left.setPower(1);
+                lwr_arm_right.setPower(1);
             } else if (buttonY) {
                 lwr_arm_left.setPower(-0.5);
                 lwr_arm_right.setPower(-0.5);
