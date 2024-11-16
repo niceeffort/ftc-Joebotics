@@ -36,7 +36,7 @@ public class AscentZone extends LinearOpMode {
             ft_rt.setPower(0.5);
             ft_lt.setPower(-0.5);
 
-            sleep(2500);
+            sleep(2000);
             doneSide = true;
         }
 
