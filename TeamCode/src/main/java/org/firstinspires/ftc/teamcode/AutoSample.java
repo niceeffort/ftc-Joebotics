@@ -25,7 +25,7 @@ public class AutoSample extends LinearOpMode {
 //Drives forward ~60 inches
         Actions.runBlocking(
                 drive.actionBuilder(beginPose)
-                        .strafeTo(new Vector2d(0,-10))
+                        .strafeTo(new Vector2d(0,-5))
                         .setTangent(0) // You need to set the tangent to 0 to drive forward because the strafeTo function will change it
                         .lineToX(12, new TranslationalVelConstraint(30))
                         .build());
@@ -34,7 +34,7 @@ public class AutoSample extends LinearOpMode {
         sleep(1000);
 
         Actions.runBlocking(drive.actionBuilder(new Pose2d(12, -10, 0))
-                .lineToX(-125)
+                .lineToX(-110)
                 .build());
     }
 }
