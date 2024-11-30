@@ -25,6 +25,9 @@ public class GreenDrive extends LinearOpMode{
         DcMotor arm = hardwareMap.dcMotor.get("arm");
         Servo claw = hardwareMap.servo.get("claw");
         DcMotor riser = hardwareMap.dcMotor.get("riser");
+        //Temporary
+        //riser.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+       // riser.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         // This part may be robot dependant
         bk_lt.setDirection(DcMotor.Direction.REVERSE);
@@ -72,8 +75,9 @@ public class GreenDrive extends LinearOpMode{
                 claw.setPosition(.5);
             }
 
-            //Print claw position
+            //Print claw and arm position
             telemetry.addData("Claw position", claw.getPosition());
+            telemetry.addData("Riser position", riser.getCurrentPosition());
             telemetry.update();
 
             //double botHeading = imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle;
