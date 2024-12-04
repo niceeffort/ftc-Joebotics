@@ -13,17 +13,20 @@ public class AutoHangPark extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException{
+
         Pose2d beginPose = new Pose2d(0, 60, Math.toRadians(-90));
         MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
         Riser myRiser = new Riser(hardwareMap);
         Claw myClaw = new Claw(hardwareMap);
 
-        waitForStart();
-
+        // Create the trajectory actions
         TrajectoryActionBuilder drive_forward = drive.actionBuilder(beginPose).lineToY(35);
         TrajectoryActionBuilder drive_to_bar = drive_forward.endTrajectory().fresh().lineToY(30);
         TrajectoryActionBuilder drive_to_park = drive_to_bar.endTrajectory().fresh().strafeToConstantHeading(new Vector2d(-55, 60));
 
+        waitForStart();
+
+        // Run the autonomous sequence
         Actions.runBlocking(
                 new SequentialAction( myClaw.setPosition(Claw.ClawPosition.CLOSE),
                                       drive_forward.build(),
