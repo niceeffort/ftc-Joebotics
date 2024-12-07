@@ -32,7 +32,7 @@ public class AutoHangPark extends LinearOpMode {
                                       drive_forward.build(),
                                       myRiser.setPosition(Riser.RiserPosition.HIGH_BAR),
                                       drive_to_bar.build(),
-                                      myRiser.setPosition(Riser.RiserPosition.DOWN),
+                                      myRiser.setPosition(Riser.RiserPosition.BOTTOM),
                                       drive_to_park.build()));
     }
 }

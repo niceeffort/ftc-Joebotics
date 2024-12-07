@@ -34,7 +34,7 @@ public class RiserTest extends LinearOpMode {
         telemetry.addLine("Up position");
         telemetry.update();
         sleep(2000);
-        Actions.runBlocking(myRiser.setPosition(Riser.RiserPosition.DOWN));
+        Actions.runBlocking(myRiser.setPosition(Riser.RiserPosition.BOTTOM));
         telemetry.addLine("Down position");
         telemetry.update();
 
