@@ -17,9 +17,11 @@ class Riser {
     private final DcMotorEx riserMotor;
     private final OverflowEncoder riserEncoder;
 
-    public enum RiserPosition {UP, HIGH_BAR, DOWN}
+    public enum RiserPosition {TOP, HIGH_BAR, BOTTOM}
 
     private final int[] riserPositions = new int[]{500, 1900, 0};
+
+    private final int tolerance = 100;
 
     public Riser(HardwareMap hardwareMap) {
         riserMotor = hardwareMap.get(DcMotorEx.class, "riser");
@@ -28,7 +30,7 @@ class Riser {
         riserMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         riserMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         riserMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        riserMotor.setTargetPosition(riserPositions[RiserPosition.DOWN.ordinal()]);
+        riserMotor.setTargetPosition(riserPositions[RiserPosition.BOTTOM.ordinal()]);
         riserMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         riserMotor.setPower(0.5);
     }
@@ -36,6 +38,8 @@ class Riser {
     public Action setPosition(RiserPosition position) {
         return new Action() {
             private boolean initialized = false;
+            private final int minPosition = riserPositions[position.ordinal()] - tolerance;
+            private final int maxPosition = riserPositions[position.ordinal()] + tolerance;
 
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
@@ -43,9 +47,11 @@ class Riser {
                     riserMotor.setTargetPosition(riserPositions[position.ordinal()]);
                     initialized = true;
                 }
-                double motorPosition = riserMotor.getCurrentPosition();
 
-                return motorPosition != riserPositions[position.ordinal()];
+                double motorPosition = riserMotor.getCurrentPosition();
+                packet.put("riserPosition", motorPosition);
+
+                return !(motorPosition < maxPosition && motorPosition > minPosition);
             }
         };
     }
