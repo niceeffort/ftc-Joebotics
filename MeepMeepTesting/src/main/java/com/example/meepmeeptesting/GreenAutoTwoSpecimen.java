@@ -27,25 +27,32 @@ public class GreenAutoTwoSpecimen {
         Pose2d beginPose = new Pose2d(0, 60, Math.toRadians(-90));
         DriveShim drive = myBot.getDrive();
 
-        TrajectoryActionBuilder drive_forward = drive.actionBuilder(beginPose).lineToY(35);
-        TrajectoryActionBuilder drive_to_bar = drive_forward.endTrajectory().fresh().
+        TrajectoryActionBuilder driveForward = drive.actionBuilder(beginPose).lineToY(35);
+        TrajectoryActionBuilder driveToBar = driveForward.endTrajectory().fresh().
                 lineToY(30);
 
-        TrajectoryActionBuilder drive_to_pickup = drive_to_bar.endTrajectory().fresh().
+        TrajectoryActionBuilder driveToPickup = driveToBar.endTrajectory().fresh().
                 strafeToConstantHeading(new Vector2d(-55, 45)).
                 turnTo(Math.toRadians(90));
 
-        TrajectoryActionBuilder specimen_two = drive_to_pickup.endTrajectory().fresh().
+        TrajectoryActionBuilder specimenTwo = driveToPickup.endTrajectory().fresh().
                 turnTo(Math.toRadians(-90)).
                 strafeToConstantHeading(new Vector2d(5, 35));
 
-       //TrajectoryActionBuilder drive_to_park = drive_to_bar.endTrajectory().fresh().strafeToConstantHeading(new Vector2d(-55, 60));
+        TrajectoryActionBuilder driveToBarTwo = specimenTwo.endTrajectory().fresh()
+                .setTangent(Math.toRadians(-90))
+                .lineToY(30);
+
+       TrajectoryActionBuilder driveToPark = driveToBarTwo.endTrajectory().fresh().strafeToConstantHeading(new Vector2d(-55, 60));
 
         myBot.runAction(new SequentialAction(
-                drive_forward.build(),
-                drive_to_bar.build(),
-                drive_to_pickup.build(),
-                specimen_two.build()));
+                driveForward.build(),
+                driveToBar.build(),
+                driveToPickup.build(),
+                specimenTwo.build(),
+                driveToBarTwo.build(),
+                driveToPark.build()
+                ));
 
         Image img = null;
         String filename = "field-2024-juice-dark.png";
