@@ -14,6 +14,45 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 @TeleOp(name = "DriveW2425")
 public class DriveW2425 extends LinearOpMode{
     WhiteMecanumDrive myDrive = null;
+
+    final double ARM_TICKS_PER_DEGREE =
+            28 // number of encoder ticks per rotation of the bare motor
+                    * 250047.0 / 4913.0 // This is the exact gear ratio of the 50.9:1 Yellow Jacket gearbox
+                    * 100.0 / 20.0 // This is the external gear reduction, a 20T pinion gear that drives a 100T hub-mount gear
+                    * 1/360.0; // we want ticks per degree, not per rotation
+
+        /* In these variables you'll see a number in degrees, multiplied by the ticks per degree of the arm.
+        This results in the number of encoder ticks the arm needs to move in order to achieve the ideal
+        set position of the arm. For example, the ARM_SCORE_SAMPLE_IN_LOW is set to
+        160 * ARM_TICKS_PER_DEGREE. This asks the arm to move 160° from the starting position.
+        If you'd like it to move further, increase that number. If you'd like it to not move
+        as far from the starting position, decrease it. */
+
+    final double ARM_COLLAPSED_INTO_ROBOT  = 0;
+    final double ARM_COLLECT               = 250 * ARM_TICKS_PER_DEGREE;
+    final double ARM_CLEAR_BARRIER         = 230 * ARM_TICKS_PER_DEGREE;
+    final double ARM_SCORE_SPECIMEN        = 160 * ARM_TICKS_PER_DEGREE;
+    final double ARM_SCORE_SAMPLE_IN_LOW   = 160 * ARM_TICKS_PER_DEGREE;
+    final double ARM_ATTACH_HANGING_HOOK   = 120 * ARM_TICKS_PER_DEGREE;
+    final double ARM_WINCH_ROBOT           = 15  * ARM_TICKS_PER_DEGREE;
+
+    /* Variables to store the speed the intake servo should be set at to intake, and deposit game elements. */
+    final double INTAKE_COLLECT    = -1.0;
+    final double INTAKE_OFF        =  0.0;
+    final double INTAKE_DEPOSIT    =  0.5;
+
+    /* Variables to store the positions that the wrist should be set to when folding in, or folding out. */
+    final double WRIST_FOLDED_IN   = 0.8333;
+    final double WRIST_FOLDED_OUT  = 0.5;
+
+    /* A number in degrees that the triggers can adjust the arm position by */
+    final double FUDGE_FACTOR = 15 * ARM_TICKS_PER_DEGREE;
+
+    /* Variables that are used to set the arm to a specific position */
+    double armPosition = (int)ARM_COLLAPSED_INTO_ROBOT;
+    double armPositionFudgeFactor;
+
+
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -29,21 +68,28 @@ public class DriveW2425 extends LinearOpMode{
         DcMotor ft_lt = hardwareMap.dcMotor.get("front_left_motor");
         DcMotor ft_rt = hardwareMap.dcMotor.get("front_right_motor");
         DcMotor bk_rt = hardwareMap.dcMotor.get("back_right_motor"); */
-        DcMotor lwr_arm_left = hardwareMap.dcMotor.get("lwr_arm_left");
-        DcMotor lwr_arm_right = hardwareMap.dcMotor.get("lwr_arm_right");
-        DcMotor upr_arm = hardwareMap.dcMotor.get("upr_arm");
-        Servo claw = hardwareMap.servo.get("claw");
+        //DcMotor lwr_arm_left = hardwareMap.dcMotor.get("lwr_arm_left");
+        //DcMotor lwr_arm_right = hardwareMap.dcMotor.get("lwr_arm_right");
+        //DcMotor upr_arm = hardwareMap.dcMotor.get("upr_arm");
+        DcMotor arm = hardwareMap.dcMotor.get("arm");
+        //Servo claw = hardwareMap.servo.get("claw");
         Servo wrist = hardwareMap.servo.get("wrist");
-        //CRServo claw = hardwareMap.get(CRServo.class, "claw");
+        CRServo intake  = hardwareMap.get(CRServo.class, "intake");
         //CRServo wrist = hardwareMap.get(CRServo.class, "wrist");
+
+        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // This part may be robot dependant
        /* bk_lt.setDirection(DcMotor.Direction.REVERSE);
-        ft_lt.setDirection(DcMotor.Direction.REVERSE); */
+        ft_lt.setDirection(DcMotor.Direction.REVERSE);
         lwr_arm_right.setDirection((DcMotorSimple.Direction.REVERSE));
         lwr_arm_right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lwr_arm_left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        upr_arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        upr_arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); */
+
+        arm.setTargetPosition(0);
+        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
       /*  // The IMU will be used to capture the heading for field centric driving
         IMU imu = hardwareMap.get(IMU.class, "imu");
@@ -55,6 +101,7 @@ public class DriveW2425 extends LinearOpMode{
 
         // Without this, the REV Hub's orientation is assumed to be logo up / USB forward
         imu.initialize(parameters); */
+
 
         waitForStart();
         while (opModeIsActive()) {
@@ -83,15 +130,15 @@ public class DriveW2425 extends LinearOpMode{
             double bk_rt_power = left_stick_x + left_stick_y + triggers; */
 
             // upper arm movement
-            if (dpad_up) {
+            /*if (dpad_up) {
                 upr_arm.setPower(0.75);
             } else if (dpad_down) {
                 upr_arm.setPower(-0.75);
             } else {
                 upr_arm.setPower(0);
-            }
+            } */
 
-            // lower arm movement
+            /* // lower arm movement
             if (buttonA) {
                 lwr_arm_left.setPower(0.75);
                 lwr_arm_right.setPower(0.75);
@@ -101,22 +148,71 @@ public class DriveW2425 extends LinearOpMode{
             } else {
                 lwr_arm_left.setPower(0);
                 lwr_arm_right.setPower(0);
-            }
-
-            // claw movement
-            if (bumperL) {
-                claw.setPosition(0.5);
-
-                //claw.setPower(0.2);
-            } else if (bumperR) {
-                claw.setPosition(0);
-
-                //claw.setPower(-0.2);
-            } /* else {
-               // claw.setPower(0);
             } */
 
-            //wrist
+            if(gamepad1.right_bumper){
+                /* This is the intaking/collecting arm position */
+                armPosition = ARM_COLLECT;
+                wrist.setPosition(WRIST_FOLDED_OUT);
+                intake.setPower(INTAKE_COLLECT);
+            }
+
+            else if (gamepad1.left_bumper){
+                    /* This is about 20° up from the collecting position to clear the barrier
+                    Note here that we don't set the wrist position or the intake power when we
+                    select this "mode", this means that the intake and wrist will continue what
+                    they were doing before we clicked left bumper. */
+                armPosition = ARM_CLEAR_BARRIER;
+            }
+
+            else if (gamepad1.y){
+                /* score the sample in the LOW BASKET */
+                armPosition = ARM_SCORE_SAMPLE_IN_LOW;
+            }
+
+            else if (gamepad1.dpad_left) {
+                    /* off intake, fold wrist, move the arm
+                    to folded in robot - starting configuration */
+                armPosition = ARM_COLLAPSED_INTO_ROBOT;
+                intake.setPower(INTAKE_OFF);
+                wrist.setPosition(WRIST_FOLDED_IN);
+            }
+
+            else if (gamepad1.dpad_right){
+                /* score SPECIMEN on the HIGH CHAMBER */
+                armPosition = ARM_SCORE_SPECIMEN;
+                wrist.setPosition(WRIST_FOLDED_IN);
+            }
+
+            else if (gamepad1.dpad_up){
+                /* arm to vertical to hook onto the LOW RUNG */
+                armPosition = ARM_ATTACH_HANGING_HOOK;
+                intake.setPower(INTAKE_OFF);
+                wrist.setPosition(WRIST_FOLDED_IN);
+            }
+
+            else if (gamepad1.dpad_down){
+                /* arm down to lift the robot */
+                armPosition = ARM_WINCH_ROBOT;
+                intake.setPower(INTAKE_OFF);
+                wrist.setPosition(WRIST_FOLDED_IN);
+            }
+
+
+           /* // claw movement
+            if (bumperL) {
+               claw.setPosition(0.5);
+
+              //claw.setPower(0.2);
+            } else if (bumperR) {
+               claw.setPosition(0);
+
+               //claw.setPower(-0.2);
+            }  else {
+               //claw.setPower(0);
+            } */
+
+            /* //wrist
             if (buttonB) {
                 wrist.setPosition(1);
                 //wrist.setPower(0.2);
