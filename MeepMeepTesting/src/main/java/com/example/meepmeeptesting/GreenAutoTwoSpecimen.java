@@ -28,14 +28,24 @@ public class GreenAutoTwoSpecimen {
         DriveShim drive = myBot.getDrive();
 
         TrajectoryActionBuilder drive_forward = drive.actionBuilder(beginPose).lineToY(35);
-        TrajectoryActionBuilder drive_to_bar = drive_forward.endTrajectory().fresh().lineToY(30);
-        TrajectoryActionBuilder drive_to_pickup = drive_to_bar.endTrajectory().fresh().strafeToConstantHeading(new Vector2d(-55, 45)).turnTo(Math.toRadians(90));
+        TrajectoryActionBuilder drive_to_bar = drive_forward.endTrajectory().fresh().
+                lineToY(30);
+
+        TrajectoryActionBuilder drive_to_pickup = drive_to_bar.endTrajectory().fresh().
+                strafeToConstantHeading(new Vector2d(-55, 45)).
+                turnTo(Math.toRadians(90));
+
+        TrajectoryActionBuilder specimen_two = drive_to_pickup.endTrajectory().fresh().
+                turnTo(Math.toRadians(-90)).
+                strafeToConstantHeading(new Vector2d(5, 35));
+
        //TrajectoryActionBuilder drive_to_park = drive_to_bar.endTrajectory().fresh().strafeToConstantHeading(new Vector2d(-55, 60));
 
         myBot.runAction(new SequentialAction(
                 drive_forward.build(),
                 drive_to_bar.build(),
-                drive_to_pickup.build()));
+                drive_to_pickup.build(),
+                specimen_two.build()));
 
         Image img = null;
         String filename = "field-2024-juice-dark.png";
