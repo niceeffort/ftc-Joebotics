@@ -19,6 +19,11 @@ public class GreenAutoTwoSpecimen {
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(800);
 
+        System.out.println("Hello World");
+
+        // Get start time
+        long startTime = System.currentTimeMillis();
+
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
@@ -44,6 +49,14 @@ public class GreenAutoTwoSpecimen {
                 .lineToY(30);
 
        TrajectoryActionBuilder driveToPark = driveToBarTwo.endTrajectory().fresh().strafeToConstantHeading(new Vector2d(-55, 60));
+
+       // Get end time
+        long endTime = System.currentTimeMillis();
+
+        // Calculate execution time
+        long executionTime = endTime - startTime;
+
+        System.out.println("Execution time: " + executionTime + " milliseconds");
 
         myBot.runAction(new SequentialAction(
                 driveForward.build(),
