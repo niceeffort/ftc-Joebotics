@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
@@ -18,20 +19,21 @@ public class AutoTwoSpecimen extends LinearOpMode {
 
         Riser myRiser = new Riser(hardwareMap);
         Claw myClaw = new Claw(hardwareMap);
+        Arm myArm = new Arm(hardwareMap);
 
         TrajectoryActionBuilder driveForward = drive.actionBuilder(beginPose).lineToY(35);
         TrajectoryActionBuilder driveToBar = driveForward.endTrajectory().fresh().
                 lineToY(30);
 
         TrajectoryActionBuilder driveToPickup = driveToBar.endTrajectory().fresh().
-                strafeToConstantHeading(new Vector2d(-55, 45)).
+                strafeToConstantHeading(new Vector2d(-65, 35)).
                 turnTo(Math.toRadians(90));
 
-        TrajectoryActionBuilder specimenTwo = driveToPickup.endTrajectory().fresh().
+        TrajectoryActionBuilder driveBackToBar = driveToPickup.endTrajectory().fresh().
                 turnTo(Math.toRadians(-90)).
                 strafeToConstantHeading(new Vector2d(5, 35));
 
-        TrajectoryActionBuilder driveToBarTwo = specimenTwo.endTrajectory().fresh()
+        TrajectoryActionBuilder driveToBarTwo = driveBackToBar.endTrajectory().fresh()
                 .setTangent(Math.toRadians(-90))
                 .lineToY(30);
 
@@ -47,7 +49,12 @@ public class AutoTwoSpecimen extends LinearOpMode {
                 myRiser.setPosition(Riser.RiserPosition.BOTTOM),
                 driveToPickup.build(),
                 myClaw.setPosition(Claw.ClawPosition.OPEN),
-                specimenTwo.build(),
+                myArm.setPosition(Arm.ArmPosition.DOWN),
+                new SleepAction(2),
+                myClaw.setPosition(Claw.ClawPosition.CLOSE),
+                new SleepAction(2),
+                myArm.setPosition(Arm.ArmPosition.UP),
+                driveBackToBar.build(),
                 myRiser.setPosition(Riser.RiserPosition.HIGH_BAR),
                 driveToBarTwo.build(),
                 myRiser.setPosition(Riser.RiserPosition.BOTTOM),

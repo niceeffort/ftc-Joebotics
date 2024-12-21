@@ -78,6 +78,7 @@ public class GreenDrive extends LinearOpMode{
             //Print claw and arm position
             telemetry.addData("Claw position", claw.getPosition());
             telemetry.addData("Riser position", riser.getCurrentPosition());
+            telemetry.addData("Arm position", arm.getCurrentPosition());
             telemetry.update();
 
             //double botHeading = imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle;
