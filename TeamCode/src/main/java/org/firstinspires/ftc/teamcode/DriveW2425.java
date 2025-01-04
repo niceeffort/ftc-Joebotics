@@ -5,15 +5,19 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
 @TeleOp(name = "DriveW2425")
 public class DriveW2425 extends LinearOpMode{
     WhiteMecanumDrive myDrive = null;
+    public CRServo  intake      = null; //the active intake servo
+    public Servo    wrist       = null; //the wrist servo
 
     final double ARM_TICKS_PER_DEGREE =
             28 // number of encoder ticks per rotation of the bare motor
@@ -63,6 +67,26 @@ public class DriveW2425 extends LinearOpMode{
         boolean lowPowerMode = false;
         boolean aButtonPress = false;
 
+        DcMotor arm  = hardwareMap.get(DcMotor.class, "arm"); //the arm motor
+        Servo wrist = hardwareMap.servo.get("wrist");
+        CRServo intake  = hardwareMap.get(CRServo.class, "intake");
+
+        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        /*This sets the maximum current that the control hub will apply to the arm before throwing a flag */
+        ((DcMotorEx) arm).setCurrentAlert(5, CurrentUnit.AMPS);
+
+        /* Before starting the armMotor. We'll make sure the TargetPosition is set to 0.
+        Then we'll set the RunMode to RUN_TO_POSITION. And we'll ask it to stop and reset encoder.
+        If you do not have the encoder plugged into this motor, it will not run in this code. */
+        arm.setTargetPosition(0);
+        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        /* Make sure that the intake is off, and the wrist is folded in. */
+        intake.setPower(INTAKE_OFF);
+        wrist.setPosition(WRIST_FOLDED_IN);
+
         // Get the motors
        /* DcMotor bk_lt = hardwareMap.dcMotor.get("back_left_motor");
         DcMotor ft_lt = hardwareMap.dcMotor.get("front_left_motor");
@@ -71,13 +95,8 @@ public class DriveW2425 extends LinearOpMode{
         //DcMotor lwr_arm_left = hardwareMap.dcMotor.get("lwr_arm_left");
         //DcMotor lwr_arm_right = hardwareMap.dcMotor.get("lwr_arm_right");
         //DcMotor upr_arm = hardwareMap.dcMotor.get("upr_arm");
-        DcMotor arm = hardwareMap.dcMotor.get("arm");
         //Servo claw = hardwareMap.servo.get("claw");
-        Servo wrist = hardwareMap.servo.get("wrist");
-        CRServo intake  = hardwareMap.get(CRServo.class, "intake");
         //CRServo wrist = hardwareMap.get(CRServo.class, "wrist");
-
-        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // This part may be robot dependant
        /* bk_lt.setDirection(DcMotor.Direction.REVERSE);
@@ -86,10 +105,6 @@ public class DriveW2425 extends LinearOpMode{
         lwr_arm_right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lwr_arm_left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         upr_arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); */
-
-        arm.setTargetPosition(0);
-        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
       /*  // The IMU will be used to capture the heading for field centric driving
         IMU imu = hardwareMap.get(IMU.class, "imu");
@@ -150,14 +165,27 @@ public class DriveW2425 extends LinearOpMode{
                 lwr_arm_right.setPower(0);
             } */
 
-            if(gamepad1.right_bumper){
+
+            // intake powers
+            if (gamepad1.a) {
+                intake.setPower(INTAKE_COLLECT);
+            }
+            else if (gamepad1.x) {
+                intake.setPower(INTAKE_OFF);
+            }
+            else if (gamepad1.b) {
+                intake.setPower(INTAKE_DEPOSIT);
+            }
+
+
+            if(gamepad2.right_bumper){
                 /* This is the intaking/collecting arm position */
                 armPosition = ARM_COLLECT;
                 wrist.setPosition(WRIST_FOLDED_OUT);
                 intake.setPower(INTAKE_COLLECT);
             }
 
-            else if (gamepad1.left_bumper){
+            else if (gamepad2.left_bumper){
                     /* This is about 20° up from the collecting position to clear the barrier
                     Note here that we don't set the wrist position or the intake power when we
                     select this "mode", this means that the intake and wrist will continue what
@@ -165,12 +193,12 @@ public class DriveW2425 extends LinearOpMode{
                 armPosition = ARM_CLEAR_BARRIER;
             }
 
-            else if (gamepad1.y){
+            else if (gamepad2.y){
                 /* score the sample in the LOW BASKET */
                 armPosition = ARM_SCORE_SAMPLE_IN_LOW;
             }
 
-            else if (gamepad1.dpad_left) {
+            else if (gamepad2.dpad_left) {
                     /* off intake, fold wrist, move the arm
                     to folded in robot - starting configuration */
                 armPosition = ARM_COLLAPSED_INTO_ROBOT;
@@ -178,25 +206,37 @@ public class DriveW2425 extends LinearOpMode{
                 wrist.setPosition(WRIST_FOLDED_IN);
             }
 
-            else if (gamepad1.dpad_right){
+            else if (gamepad2.dpad_right){
                 /* score SPECIMEN on the HIGH CHAMBER */
                 armPosition = ARM_SCORE_SPECIMEN;
                 wrist.setPosition(WRIST_FOLDED_IN);
             }
 
-            else if (gamepad1.dpad_up){
+            else if (gamepad2.dpad_up){
                 /* arm to vertical to hook onto the LOW RUNG */
                 armPosition = ARM_ATTACH_HANGING_HOOK;
                 intake.setPower(INTAKE_OFF);
                 wrist.setPosition(WRIST_FOLDED_IN);
             }
 
-            else if (gamepad1.dpad_down){
+            else if (gamepad2.dpad_down){
                 /* arm down to lift the robot */
                 armPosition = ARM_WINCH_ROBOT;
                 intake.setPower(INTAKE_OFF);
                 wrist.setPosition(WRIST_FOLDED_IN);
             }
+
+
+            armPositionFudgeFactor = FUDGE_FACTOR * (gamepad1.right_trigger + (-gamepad1.left_trigger));
+
+
+            /* Here we set the target position of our arm to match the variable that was selected
+            by the driver.
+            We also set the target velocity (speed) the motor runs at, and use setMode to run it.*/
+            arm.setTargetPosition((int) (armPosition + armPositionFudgeFactor));
+
+            ((DcMotorEx) arm).setVelocity(2100);
+            arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
            /* // claw movement
