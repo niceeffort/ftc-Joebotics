@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
@@ -21,7 +22,7 @@ public class AutoTwoSpecimen extends LinearOpMode {
         Claw myClaw = new Claw(hardwareMap);
         Arm myArm = new Arm(hardwareMap);
 
-        TrajectoryActionBuilder driveForward = drive.actionBuilder(beginPose).lineToY(35);
+        TrajectoryActionBuilder driveForward = drive.actionBuilder(beginPose).lineToY(30);
         TrajectoryActionBuilder driveToBar = driveForward.endTrajectory().fresh().
                 lineToY(30);
 
@@ -41,11 +42,12 @@ public class AutoTwoSpecimen extends LinearOpMode {
 
         waitForStart();
 
-        Actions.runBlocking(new SequentialAction(
+        Actions.runBlocking(new ParallelAction(
                 myClaw.setPosition(Claw.ClawPosition.CLOSE),
-                driveForward.build(),
                 myRiser.setPosition(Riser.RiserPosition.HIGH_BAR),
-                driveToBar.build(),
+                driveForward.build()));
+
+        Actions.runBlocking(new SequentialAction(
                 myRiser.setPosition(Riser.RiserPosition.BOTTOM),
                 driveToPickup.build(),
                 myClaw.setPosition(Claw.ClawPosition.OPEN),
