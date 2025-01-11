@@ -167,13 +167,13 @@ public class DriveW2425 extends LinearOpMode{
 
 
             // intake powers
-            if (gamepad1.a) {
+            if (gamepad2.a) {
                 intake.setPower(INTAKE_COLLECT);
             }
-            else if (gamepad1.x) {
+            else if (gamepad2.x) {
                 intake.setPower(INTAKE_OFF);
             }
-            else if (gamepad1.b) {
+            else if (gamepad2.b) {
                 intake.setPower(INTAKE_DEPOSIT);
             }
 
