@@ -48,20 +48,27 @@ public class AutoTwoSpecimen extends LinearOpMode {
                 driveForward.build()));
 
         Actions.runBlocking(new SequentialAction(
-                myRiser.setPosition(Riser.RiserPosition.BOTTOM),
-                driveToPickup.build(),
+                myRiser.setPosition(Riser.RiserPosition.BOTTOM)));
+
+        Actions.runBlocking(new ParallelAction(
                 myClaw.setPosition(Claw.ClawPosition.OPEN),
-                myArm.setPosition(Arm.ArmPosition.DOWN),
+                driveToPickup.build(),
+                myArm.setPosition(Arm.ArmPosition.DOWN)));
+
+        Actions.runBlocking(new SequentialAction(
                 new SleepAction(2),
                 myClaw.setPosition(Claw.ClawPosition.CLOSE),
-                new SleepAction(2),
+                new SleepAction(2)));
+
+        Actions.runBlocking(new ParallelAction(
                 myArm.setPosition(Arm.ArmPosition.UP),
                 driveBackToBar.build(),
-                myRiser.setPosition(Riser.RiserPosition.HIGH_BAR),
+                myRiser.setPosition(Riser.RiserPosition.HIGH_BAR)));
+
+        Actions.runBlocking(new SequentialAction(
                 driveToBarTwo.build(),
                 myRiser.setPosition(Riser.RiserPosition.BOTTOM),
-                driveToPark.build()
-        ));
+                driveToPark.build()));
 
     }
 }
