@@ -15,9 +15,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
 @TeleOp(name = "DriveW2425")
 public class DriveW2425 extends LinearOpMode{
+
     WhiteMecanumDrive myDrive = null;
-    public CRServo  intake      = null; //the active intake servo
-    public Servo    wrist       = null; //the wrist servo
+    /* public CRServo  intake      = null; //the active intake servo
+    public Servo    wrist       = null; //the wrist servo */
 
 
     @Override
