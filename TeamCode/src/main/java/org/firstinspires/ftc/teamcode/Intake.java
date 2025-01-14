@@ -16,5 +16,5 @@ public class Intake {
     public final Servo intakeServo;
 
     public enum intakePos {IN, OUT};
-    private final double
+    private final double[] intakePowers = new double[]{};
 }

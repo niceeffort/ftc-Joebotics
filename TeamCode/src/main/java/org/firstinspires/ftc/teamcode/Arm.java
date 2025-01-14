@@ -15,9 +15,15 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
      private final DcMotorEx armMotor;
      private final OverflowEncoder armEncoder;
 
-     public enum ArmPos {HIGH_BAR, BOTTOM}
+     final double ARM_TICKS_PER_DEGREE =
+             28
+                     * 250047.0 / 4913.0
+                     * 100.0 / 20.0
+                     * 1 / 360.0;
 
-     private final int[] armPos = new int[]{1900, 0};
+     public enum ArmPos {ARM_COLLECT, ARM_SCORE, DOWN}
+
+     private final int[] armPos = new int[]{(int) (250 * ARM_TICKS_PER_DEGREE), (int) (160 * ARM_TICKS_PER_DEGREE), 0};
 
      private final int tolerance = 100;
 
@@ -26,7 +32,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
          armEncoder = new OverflowEncoder(new RawEncoder(armMotor));
          armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
          armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-         armMotor.setTargetPosition(armPos[ArmPos.BOTTOM.ordinal()]);
+         armMotor.setTargetPosition(armPos[ArmPos.DOWN.ordinal()]);
          armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
          armMotor.setPower(0.5);
      }
