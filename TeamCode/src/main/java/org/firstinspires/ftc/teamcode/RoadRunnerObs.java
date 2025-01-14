@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
@@ -19,11 +21,18 @@ public class RoadRunnerObs extends LinearOpMode {
         Pose2d beginPose = new Pose2d(0, 60, Math.toRadians(-90));
         MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
 
+        Arm myArm = new Arm(hardwareMap);
+        //Intake mtIntake = new Intake(hardwareMap);
+
+        TrajectoryActionBuilder net_zone = drive.actionBuilder(beginPose).lineToX(60);
+        //check pos on coordinate plane
+        TrajectoryActionBuilder obs_zone_park = net_zone.endTrajectory().fresh().strafeToConstantHeading();
+
         waitForStart();
 
         Actions.runBlocking(
-                drive.actionBuilder(beginPose)
-                        .strafeToConstantHeading(new Vector2d(-55, 60))
-                        .build());
+                new SequentialAction(net_zone.build(),
+                        myArm.setPosition(Arm.ArmPos.HIGH_BAR),
+                        obs_zone_park.build()));
     }
 }
