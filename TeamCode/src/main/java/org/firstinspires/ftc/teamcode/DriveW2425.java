@@ -88,7 +88,7 @@ public class DriveW2425 extends LinearOpMode{
                 wrist.setPosition(1);
             } else if (buttonB) {
                 //wrist in
-                wrist.setPosition(0.75);
+                wrist.setPosition(0.5);
             }
 
 
