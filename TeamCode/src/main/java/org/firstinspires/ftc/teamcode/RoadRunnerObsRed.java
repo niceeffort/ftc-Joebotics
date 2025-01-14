@@ -8,8 +8,8 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-@Autonomous(name = "RoadRunnerObsBlue")
-public class RoadRunnerObsBlue extends LinearOpMode {
+@Autonomous(name = "RoadRunnerObsRed")
+public class RoadRunnerObsRed extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
