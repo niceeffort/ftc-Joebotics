@@ -18,14 +18,21 @@ public class AutoTwoSpecimenC extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         //Reset motor encoders
-        hardwareMap.dcMotor.get("back_left_motor").
-                setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        hardwareMap.dcMotor.get("front_left_motor").
-                setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        hardwareMap.dcMotor.get("front_right_motor").
-                setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        hardwareMap.dcMotor.get("back_right_motor").
-                setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        DcMotor bk_lt = hardwareMap.dcMotor.get("back_left_motor");
+        bk_lt.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        bk_lt.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        DcMotor fr_lt = hardwareMap.dcMotor.get("front_left_motor");
+        fr_lt.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        fr_lt.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        DcMotor fr_rt = hardwareMap.dcMotor.get("front_right_motor");
+        fr_rt.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        fr_rt.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        DcMotor bk_rt = hardwareMap.dcMotor.get("back_right_motor");
+        bk_rt.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        bk_rt.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         Pose2d beginPose = new Pose2d(0, 60, Math.toRadians(-90));
         MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
