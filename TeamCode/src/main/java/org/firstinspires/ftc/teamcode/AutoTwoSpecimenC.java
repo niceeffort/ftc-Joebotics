@@ -47,7 +47,7 @@ public class AutoTwoSpecimenC extends LinearOpMode {
                 strafeToConstantHeading(new Vector2d(-65, 35)).
                 turnTo(Math.toRadians(90));
 
-        TrajectoryActionBuilder driveBackToBar = driveToPickup.endTrajectory().fresh().
+        TrajectoryActionBuilder driveBackToBar = drive.actionBuilder(new Pose2d(-65,35,Math.toRadians(90))).
                 turnTo(Math.toRadians(-90)).
                 strafeToConstantHeading(new Vector2d(5, 35));
 
