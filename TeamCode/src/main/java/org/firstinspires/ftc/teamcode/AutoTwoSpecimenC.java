@@ -9,12 +9,24 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 @Autonomous(name = "AutoTwoSpecimenC")
 public class AutoTwoSpecimenC extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+
+        //Reset motor encoders
+        hardwareMap.dcMotor.get("back_left_motor").
+                setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        hardwareMap.dcMotor.get("front_left_motor").
+                setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        hardwareMap.dcMotor.get("front_right_motor").
+                setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        hardwareMap.dcMotor.get("back_right_motor").
+                setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         Pose2d beginPose = new Pose2d(0, 60, Math.toRadians(-90));
         MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
 
