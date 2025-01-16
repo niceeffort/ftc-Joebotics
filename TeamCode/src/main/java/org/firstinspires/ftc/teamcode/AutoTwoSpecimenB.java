@@ -10,8 +10,8 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-@Autonomous(name = "AutoTwoSpecimen")
-public class AutoTwoSpecimen extends LinearOpMode {
+@Autonomous(name = "AutoTwoSpecimenB")
+public class AutoTwoSpecimenB extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -23,10 +23,10 @@ public class AutoTwoSpecimen extends LinearOpMode {
         Arm myArm = new Arm(hardwareMap);
 
         TrajectoryActionBuilder driveForward = drive.actionBuilder(beginPose).lineToY(30);
-        TrajectoryActionBuilder driveToBar = driveForward.endTrajectory().fresh().
-                lineToY(30);
+        //TrajectoryActionBuilder driveToBar = driveForward.endTrajectory().fresh().
+        //        lineToY(30);
 
-        TrajectoryActionBuilder driveToPickup = driveToBar.endTrajectory().fresh().
+        TrajectoryActionBuilder driveToPickup = driveForward.endTrajectory().fresh().
                 strafeToConstantHeading(new Vector2d(-65, 35)).
                 turnTo(Math.toRadians(90));
 
@@ -44,31 +44,30 @@ public class AutoTwoSpecimen extends LinearOpMode {
 
         Actions.runBlocking(new ParallelAction(
                 myClaw.setPosition(Claw.ClawPosition.CLOSE),
-                myRiser.setPosition(Riser.RiserPosition.HIGH_BAR),
-                driveForward.build()));
+                myRiser.setPosition(Riser.RiserPosition.HIGH_BAR)));
 
         Actions.runBlocking(new SequentialAction(
-                myRiser.setPosition(Riser.RiserPosition.BOTTOM)));
+                driveForward.build(),
+                myRiser.setPosition(Riser.RiserPosition.BOTTOM),
+                driveToPickup.build()));
 
         Actions.runBlocking(new ParallelAction(
                 myClaw.setPosition(Claw.ClawPosition.OPEN),
-                driveToPickup.build(),
                 myArm.setPosition(Arm.ArmPosition.DOWN)));
 
         Actions.runBlocking(new SequentialAction(
-                new SleepAction(2),
+                new SleepAction(1),
                 myClaw.setPosition(Claw.ClawPosition.CLOSE),
                 new SleepAction(2)));
 
         Actions.runBlocking(new ParallelAction(
                 myArm.setPosition(Arm.ArmPosition.UP),
-                driveBackToBar.build(),
                 myRiser.setPosition(Riser.RiserPosition.HIGH_BAR)));
 
         Actions.runBlocking(new SequentialAction(
+                driveBackToBar.build(),
                 driveToBarTwo.build(),
                 myRiser.setPosition(Riser.RiserPosition.BOTTOM),
                 driveToPark.build()));
-
     }
 }
