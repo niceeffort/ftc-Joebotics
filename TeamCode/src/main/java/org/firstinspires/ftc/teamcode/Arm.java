@@ -10,10 +10,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Arm {
 
-    // TODO: Add the variables you will need here
-    // This is how long you want to run the motor in milliseconds.
-    // The longer you run it the farther it will go
-    long runTime = 2500;
     private final DcMotorEx armMotor;
 
     // Enumeration for Arm Position
@@ -33,18 +29,11 @@ public class Arm {
     public Action setPosition(Arm.ArmPosition position) {
         return new Action() {
             private boolean initialized = false;
-            //long startTime;
 
-            // This is how long you want to run the motor
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
                 if (!initialized) {
-                    // Capture the start time
-                    //startTime = System.currentTimeMillis();
                     initialized = true;
-
-                    //TODO: Set power to the motor depending on the direction you want to go
-                    //armMotor.setPower(armPositions[position.ordinal()]);
                     armMotor.setTargetPosition(armPositions[position.ordinal()]);
                 }
 
@@ -52,19 +41,6 @@ public class Arm {
                 packet.put("arm Position", currentPosition);
                 packet.put("arm Target Position", armMotor.getTargetPosition());
                 return !(currentPosition == armPositions[position.ordinal()]);
-
-
-                // Get the current time
-                /*long currentTime = System.currentTimeMillis();
-
-                // If the time has run out you are done. If not, keep returning true and checking the time
-                if (currentTime - startTime > runTime) {
-                    armMotor.setPower(0.0);
-                    return false; // Return false to stop the action
-                } else {
-                    return true; // Return true to continue the action
-                }
-                 */
             }
         };
     }
