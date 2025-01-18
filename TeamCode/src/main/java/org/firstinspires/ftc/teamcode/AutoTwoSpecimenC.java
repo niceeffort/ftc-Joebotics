@@ -41,19 +41,19 @@ public class AutoTwoSpecimenC extends LinearOpMode {
         Claw myClaw = new Claw(hardwareMap);
         Arm myArm = new Arm(hardwareMap);
 
-        TrajectoryActionBuilder driveForward = drive.actionBuilder(beginPose).lineToY(30);
+        TrajectoryActionBuilder driveForward = drive.actionBuilder(beginPose).lineToY(32);
 
         TrajectoryActionBuilder driveToPickup = driveForward.endTrajectory().fresh().
-                strafeToConstantHeading(new Vector2d(-65, 35)).
+                strafeToConstantHeading(new Vector2d(-55, 35)).
                 turnTo(Math.toRadians(90));
-
-        TrajectoryActionBuilder driveBackToBar = drive.actionBuilder(new Pose2d(-65,35,Math.toRadians(90))).
+        
+        TrajectoryActionBuilder driveBackToBar = driveToPickup.endTrajectory().fresh().
                 turnTo(Math.toRadians(-90)).
                 strafeToConstantHeading(new Vector2d(5, 35));
 
         TrajectoryActionBuilder driveToBarTwo = driveBackToBar.endTrajectory().fresh()
                 .setTangent(Math.toRadians(-90))
-                .lineToY(30);
+                .lineToY(32);
 
         TrajectoryActionBuilder driveToPark = driveToBarTwo.endTrajectory().fresh().strafeToConstantHeading(new Vector2d(-55, 60));
 
@@ -77,7 +77,7 @@ public class AutoTwoSpecimenC extends LinearOpMode {
                     new SequentialAction(
                         new SleepAction(1),
                         myClaw.setPosition(Claw.ClawPosition.CLOSE),
-                        new SleepAction(2)),
+                        new SleepAction(1)),
 
                     new ParallelAction(
                         myArm.setPosition(Arm.ArmPosition.UP),
