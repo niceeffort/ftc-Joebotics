@@ -45,22 +45,22 @@ public class SimplifiedOdometryRobot {
     private static final double YAW_MAX_AUTO        = 0.6;     // "default" Maximum Yaw power limit during autonomous
 
     // Public Members
-    public double driveDistance     = 0; // scaled axial distance (+ = forward)
-    public double strafeDistance    = 0; // scaled lateral distance (+ = left)
-    public double heading           = 0; // Latest Robot heading from IMU
+    public double driveDistance = 0; // scaled axial distance (+ = forward)
+    public double strafeDistance = 0; // scaled lateral distance (+ = left)
+    public double heading = 0; // Latest Robot heading from IMU
 
     // Establish a proportional controller for each axis to calculate the required power to achieve a setpoint.
-    public ProportionalControl driveController     = new ProportionalControl(DRIVE_GAIN, DRIVE_ACCEL, DRIVE_MAX_AUTO, DRIVE_TOLERANCE, DRIVE_DEADBAND, false);
-    public ProportionalControl strafeController    = new ProportionalControl(STRAFE_GAIN, STRAFE_ACCEL, STRAFE_MAX_AUTO, STRAFE_TOLERANCE, STRAFE_DEADBAND, false);
-    public ProportionalControl yawController       = new ProportionalControl(YAW_GAIN, YAW_ACCEL, YAW_MAX_AUTO, YAW_TOLERANCE,YAW_DEADBAND, true);
+    public ProportionalControl driveController = new ProportionalControl(DRIVE_GAIN, DRIVE_ACCEL, DRIVE_MAX_AUTO, DRIVE_TOLERANCE, DRIVE_DEADBAND, false);
+    public ProportionalControl strafeController = new ProportionalControl(STRAFE_GAIN, STRAFE_ACCEL, STRAFE_MAX_AUTO, STRAFE_TOLERANCE, STRAFE_DEADBAND, false);
+    public ProportionalControl yawController = new ProportionalControl(YAW_GAIN, YAW_ACCEL, YAW_MAX_AUTO, YAW_TOLERANCE,YAW_DEADBAND, true);
 
     // ---  Private Members
 
     // Hardware interface Objects
-    private DcMotor leftFrontDrive;     //  control the left front drive wheel
-    private DcMotor rightFrontDrive;    //  control the right front drive wheel
-    private DcMotor leftBackDrive;      //  control the left back drive wheel
-    private DcMotor rightBackDrive;     //  control the right back drive wheel
+    private DcMotor leftFrontDrive;     // control the left front drive wheel
+    private DcMotor rightFrontDrive;    // control the right front drive wheel
+    private DcMotor leftBackDrive;      // control the left back drive wheel
+    private DcMotor rightBackDrive;     // control the right back drive wheel
 
     // We don't need these because we will be calling pinpoint directly
     //private DcMotor driveEncoder;       //  the Axial (front/back) Odometry Module (may overlap with motor, or may not)
@@ -78,8 +78,8 @@ public class SimplifiedOdometryRobot {
     private double rawHeading       = 0; // Unmodified heading (degrees)
     private double headingOffset    = 0; // Used to offset heading
 
-    private double turnRate           = 0; // Latest Robot Turn Rate from IMU
-    private boolean showTelemetry     = false;
+    private double turnRate = 0; // Latest Robot Turn Rate from IMU
+    private boolean showTelemetry = false;
 
     // Robot Constructor
     public SimplifiedOdometryRobot(LinearOpMode opmode) {
@@ -98,11 +98,10 @@ public class SimplifiedOdometryRobot {
         // TODO: motor/device must match the names assigned during the robot configuration.
 
         // !!!  Set the drive direction to ensure positive power drives each wheel forward.
-        leftFrontDrive  = setupDriveMotor("ft_lt", DcMotor.Direction.REVERSE);
-        rightFrontDrive = setupDriveMotor("ft_rt", DcMotor.Direction.FORWARD);
-        leftBackDrive  = setupDriveMotor( "bk_lt", DcMotor.Direction.REVERSE);
-        rightBackDrive = setupDriveMotor( "bk_rt",DcMotor.Direction.FORWARD);
-
+        leftFrontDrive = setupDriveMotor("front_left_motor", DcMotor.Direction.REVERSE);
+        rightFrontDrive = setupDriveMotor("front_right_motor", DcMotor.Direction.FORWARD);
+        leftBackDrive = setupDriveMotor( "back_left_motor", DcMotor.Direction.REVERSE);
+        rightBackDrive = setupDriveMotor( "back_right_motor",DcMotor.Direction.FORWARD);
         pinpoint = myOpMode.hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
 
         //This will not work because we are reading the raw data from the encoders
@@ -281,7 +280,6 @@ public class SimplifiedOdometryRobot {
         }
         stopRobot();
     }
-
 
     //  ########################  Low level control functions.  ###############################
 
