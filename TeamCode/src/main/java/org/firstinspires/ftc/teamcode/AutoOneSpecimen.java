@@ -26,7 +26,7 @@ public class AutoOneSpecimen extends LinearOpMode {
                 lineToY(30);
 
         TrajectoryActionBuilder driveLeft = driveToBar.endTrajectory().fresh().lineToY(35)
-                .setTangent(Math.toRadians(0)).lineToX(40);
+                .setTangent(Math.toRadians(0)).lineToX(45);
 
         TrajectoryActionBuilder driveToSubmersible = driveLeft.endTrajectory().fresh()
                 .setTangent(Math.toRadians(-90)).lineToY(2).turnTo(Math.toRadians(180))
