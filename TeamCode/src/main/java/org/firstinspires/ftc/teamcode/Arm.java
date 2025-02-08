@@ -14,7 +14,7 @@ public class Arm {
 
     // Enumeration for Arm Position
     public enum ArmPosition {UP, DOWN}
-    private final int[] armPositions = new int[] {0,1528};
+    private final int[] armPositions = new int[] {0,818};
 
     public Arm(HardwareMap hardwareMap){
 
