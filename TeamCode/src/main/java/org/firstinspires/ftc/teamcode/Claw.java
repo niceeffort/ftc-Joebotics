@@ -11,7 +11,7 @@ public class Claw {
     private final Servo clawServo;
 
     public enum ClawPosition {OPEN, CLOSE}
-    private final double[] clawPositions = new double[]{1.0, 0.0};
+    private final double[] clawPositions = new double[]{1.0, 0.1};
 
     public Claw(HardwareMap hardwareMap){
         clawServo = hardwareMap.get(Servo.class, "claw");
