@@ -153,9 +153,10 @@ public class SimplifiedOdometryRobot {
      * @return true
      */
     public boolean readSensors() {
+        pinpoint.update();
         Pose2D pos = pinpoint.getPosition();
-        rawDriveOdometer = (int)pos.getX(DistanceUnit.MM) * (INVERT_DRIVE_ODOMETRY ? -1 : 1);
-        rawStrafeOdometer = (int)pos.getY(DistanceUnit.MM) * (INVERT_STRAFE_ODOMETRY ? -1 : 1);
+        rawDriveOdometer = (int)pos.getX(DistanceUnit.INCH) * (INVERT_DRIVE_ODOMETRY ? -1 : 1);
+        rawStrafeOdometer = (int)pos.getY(DistanceUnit.INCH) * (INVERT_STRAFE_ODOMETRY ? -1 : 1);
         driveDistance = (rawDriveOdometer - driveOdometerOffset) * ODOM_INCHES_PER_COUNT;
         strafeDistance = (rawStrafeOdometer - strafeOdometerOffset) * ODOM_INCHES_PER_COUNT;
 
@@ -163,7 +164,7 @@ public class SimplifiedOdometryRobot {
         //AngularVelocity angularVelocity = imu.getRobotAngularVelocity(AngleUnit.DEGREES);
 
         //rawHeading  = orientation.getYaw(AngleUnit.DEGREES);
-        rawHeading  = pos.getHeading(AngleUnit.RADIANS);
+        rawHeading  = pos.getHeading(AngleUnit.DEGREES);
         heading     = rawHeading - headingOffset;
         //turnRate    = angularVelocity.zRotationRate;
         turnRate    = pinpoint.getHeadingVelocity(UnnormalizedAngleUnit.DEGREES);
