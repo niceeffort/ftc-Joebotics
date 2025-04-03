@@ -26,9 +26,12 @@ import java.util.List;
 public class SimplifiedOdometryRobot {
     // Adjust these numbers to suit your robot.
     // TODO: Check this later
-    private final double ODOM_INCHES_PER_COUNT   = 0.002969;   //  GoBilda Odometry Pod (1/226.8)
-    private final boolean INVERT_DRIVE_ODOMETRY  = true;       //  When driving FORWARD, the odometry value MUST increase.  If it does not, flip the value of this constant.
-    private final boolean INVERT_STRAFE_ODOMETRY = true;       //  When strafing to the LEFT, the odometry value MUST increase.  If it does not, flip the value of this constant.
+    // I think we can just get the units in inches
+    //private final double ODOM_INCHES_PER_COUNT   = 0.002969;   //  GoBilda Odometry Pod (1/226.8)
+
+    // These can be set in pinpoint
+    //private final boolean INVERT_DRIVE_ODOMETRY  = true;       //  When driving FORWARD, the odometry value MUST increase.  If it does not, flip the value of this constant.
+    //private final boolean INVERT_STRAFE_ODOMETRY = true;       //  When strafing to the LEFT, the odometry value MUST increase.  If it does not, flip the value of this constant.
 
     private static final double DRIVE_GAIN          = 0.03;    // Strength of axial position control
     private static final double DRIVE_ACCEL         = 2.0;     // Acceleration limit.  Percent Power change per second.  1.0 = 0-100% power in 1 sec.
@@ -75,10 +78,10 @@ public class SimplifiedOdometryRobot {
     //private IMU imu;
     private ElapsedTime holdTimer = new ElapsedTime();  // User for any motion requiring a hold time or timeout.
 
-    private int rawDriveOdometer    = 0; // Unmodified axial odometer count
-    private int driveOdometerOffset = -1; // Used to offset axial odometer
-    private int rawStrafeOdometer   = 0; // Unmodified lateral odometer count
-    private int strafeOdometerOffset= 8; // Used to offset lateral odometer
+    private double rawDriveOdometer     = 0; // Unmodified axial odometer count
+    private double driveOdometerOffset  = 0; // Used to offset axial odometer
+    private double rawStrafeOdometer    = 0; // Unmodified lateral odometer count
+    private double strafeOdometerOffset = 0; // Used to offset lateral odometer
     private double rawHeading       = 0; // Unmodified heading (degrees)
     private double headingOffset    = 0; // Used to offset heading
 
@@ -106,7 +109,14 @@ public class SimplifiedOdometryRobot {
         rightFrontDrive = setupDriveMotor("ft_rt", DcMotor.Direction.FORWARD);
         leftBackDrive  = setupDriveMotor( "bk_lt", DcMotor.Direction.REVERSE);
         rightBackDrive = setupDriveMotor( "bk_rt",DcMotor.Direction.FORWARD);
+
         pinpoint = myOpMode.hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
+
+        //TODO: Reverse encoders if necessary
+        //pinpoint.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.REVERSED, GoBildaPinpointDriver.EncoderDirection.REVERSED);
+
+        //TODO: Set pinpoint offsets
+        pinpoint.setOffsets(-1, 8, DistanceUnit.INCH);
 
         //  Connect to the encoder channels using the name of that channel.
         //driveEncoder = myOpMode.hardwareMap.get(DcMotor.class, "axial");
@@ -155,10 +165,14 @@ public class SimplifiedOdometryRobot {
     public boolean readSensors() {
         pinpoint.update();
         Pose2D pos = pinpoint.getPosition();
-        rawDriveOdometer = (int)pos.getX(DistanceUnit.INCH) * (INVERT_DRIVE_ODOMETRY ? -1 : 1);
-        rawStrafeOdometer = (int)pos.getY(DistanceUnit.INCH) * (INVERT_STRAFE_ODOMETRY ? -1 : 1);
-        driveDistance = (rawDriveOdometer - driveOdometerOffset) * ODOM_INCHES_PER_COUNT;
-        strafeDistance = (rawStrafeOdometer - strafeOdometerOffset) * ODOM_INCHES_PER_COUNT;
+
+        // The inversions are set in the pinpoint device
+        rawDriveOdometer = pos.getX(DistanceUnit.INCH);// * (INVERT_DRIVE_ODOMETRY ? -1 : 1);
+        rawStrafeOdometer = pos.getY(DistanceUnit.INCH);// * (INVERT_STRAFE_ODOMETRY ? -1 : 1);
+
+        // We requested the units in inches so no need to convert
+        driveDistance = (rawDriveOdometer - driveOdometerOffset);// * ODOM_INCHES_PER_COUNT;
+        strafeDistance = (rawStrafeOdometer - strafeOdometerOffset);// * ODOM_INCHES_PER_COUNT;
 
         //YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
         //AngularVelocity angularVelocity = imu.getRobotAngularVelocity(AngleUnit.DEGREES);
