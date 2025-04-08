@@ -32,6 +32,7 @@ public class DriveW2425 extends LinearOpMode{
         boolean aButtonPress = false;
 
         DcMotor arm  = hardwareMap.get(DcMotor.class, "arm"); //the arm motor
+        DcMotor slider = hardwareMap.get(DcMotor.class, "slider");
         Servo wrist = hardwareMap.servo.get("wrist");
         CRServo intake  = hardwareMap.get(CRServo.class, "intake");
 
@@ -58,7 +59,7 @@ public class DriveW2425 extends LinearOpMode{
             boolean buttonB = gamepad2.b;
 
 
-            //arm
+            //arm up and down
             if (dpad_up) {
                 arm.setPower(0.5);
                 telemetry.addLine("arm up");
@@ -69,6 +70,19 @@ public class DriveW2425 extends LinearOpMode{
                 telemetry.update();
             } else {
                 arm.setPower(0);
+            }
+
+            //arm in and out
+            if (gamepad2.dpad_left) {
+                slider.setPower(0.5);
+                telemetry.addLine("slide out");
+                telemetry.update();
+            } else if (gamepad2.dpad_right) {
+                slider.setPower(-0.5);
+                telemetry.addLine("slide in");
+                telemetry.update();
+            } else {
+                slider.setPower(0);
             }
 
             //intake
