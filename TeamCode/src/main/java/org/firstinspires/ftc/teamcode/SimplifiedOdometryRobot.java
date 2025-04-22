@@ -184,7 +184,7 @@ public class SimplifiedOdometryRobot {
         turnRate    = pinpoint.getHeadingVelocity(UnnormalizedAngleUnit.DEGREES);
 
         if (showTelemetry) {
-            myOpMode.telemetry.addData("Odom Ax:Lat", "%6d %6d", rawDriveOdometer - driveOdometerOffset, rawStrafeOdometer - strafeOdometerOffset);
+            myOpMode.telemetry.addData("Odom Ax:Lat", "%6f %6f", rawDriveOdometer - driveOdometerOffset, rawStrafeOdometer - strafeOdometerOffset);
             myOpMode.telemetry.addData("Dist Ax:Lat", "%5.2f %5.2f", driveDistance, strafeDistance);
             myOpMode.telemetry.addData("Head Deg:Rate", "%5.2f %5.2f", heading, turnRate);
         }
