@@ -113,7 +113,7 @@ public class SimplifiedOdometryRobot {
         pinpoint = myOpMode.hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
 
         //TODO: Reverse encoders if necessary
-        //pinpoint.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.REVERSED, GoBildaPinpointDriver.EncoderDirection.REVERSED);
+        pinpoint.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.REVERSED);
 
         //TODO: Set pinpoint offsets
         pinpoint.setOffsets(-1, 8, DistanceUnit.INCH);
@@ -184,6 +184,8 @@ public class SimplifiedOdometryRobot {
         turnRate    = pinpoint.getHeadingVelocity(UnnormalizedAngleUnit.DEGREES);
 
         if (showTelemetry) {
+            myOpMode.telemetry.addData("Raw Drive, Drive Offset:", "%6f %6f", rawDriveOdometer, driveOdometerOffset);
+            myOpMode.telemetry.addData("Raw Strafe, Strafe Offset:", "%6f %6f", rawStrafeOdometer, strafeOdometerOffset);
             myOpMode.telemetry.addData("Odom Ax:Lat", "%6f %6f", rawDriveOdometer - driveOdometerOffset, rawStrafeOdometer - strafeOdometerOffset);
             myOpMode.telemetry.addData("Dist Ax:Lat", "%5.2f %5.2f", driveDistance, strafeDistance);
             myOpMode.telemetry.addData("Head Deg:Rate", "%5.2f %5.2f", heading, turnRate);
@@ -210,7 +212,9 @@ public class SimplifiedOdometryRobot {
         while (myOpMode.opModeIsActive() && readSensors()){
 
             // implement desired axis powers
-            moveRobot(driveController.getOutput(driveDistance), strafeController.getOutput(strafeDistance), yawController.getOutput(heading));
+            double strafe_output = strafeController.getOutput(strafeDistance);
+            myOpMode.telemetry.addData("Strafe Controller Output:", strafe_output);
+            moveRobot(driveController.getOutput(driveDistance), strafe_output /*strafeController.getOutput(strafeDistance)*/, yawController.getOutput(heading));
 
             // Time to exit?
             if (driveController.inPosition() && yawController.inPosition()) {
