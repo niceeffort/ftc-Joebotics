@@ -32,7 +32,7 @@ public class SampleAutonomous extends LinearOpMode
         telemetry.update();
 
         waitForStart();
-        robot.resetHeading();  // Reset heading to set a baseline for Auto
+        //robot.resetHeading();  // Reset heading to set a baseline for Auto
 
         // Run Auto if stop was not pressed.
         if (opModeIsActive())
@@ -40,22 +40,22 @@ public class SampleAutonomous extends LinearOpMode
             // Note, this example takes more than 30 seconds to execute, so turn OFF the auto timer.
 
             // Drive a large rectangle, turning at each corner
-            robot.drive(  84, 0.25, 0.25);
-            robot.turnTo(180, 0.45, 0.5);
-            robot.drive(  84, 0.60, 0.25);
-            /*robot.turnTo(180, 0.45, 0.5);
-            robot.drive(  84, 0.60, 0.25);
-            robot.turnTo(270, 0.45, 0.5);
-            robot.drive(  72, 0.60, 0.25);
-            robot.turnTo(0, 0.45, 0.5);*/
+            robot.drive(  12, 0.25, 0.25);
+            robot.turnTo(90, .25, 0.5);
+            robot.drive(  12, 0.25, 0.25);
+            robot.turnTo(180, 0.25, 0.5);
+            robot.drive(  12, 0.25, 0.25);
+            robot.turnTo(270, 0.25, 0.5);
+            robot.drive(  12, 0.25, 0.25);
+            robot.turnTo(0, 0.45, 0.5);
 
             sleep(500);
 
             // Drive the path again without turning.
-            /*robot.drive(  84, 0.60, 0.15);
-            robot.strafe( 72, 0.60, 0.15);
-            robot.drive( -84, 0.60, 0.15);
-            robot.strafe(-72, 0.60, 0.15);*/
+            robot.drive(  12, 0.25, 0.15);
+            robot.strafe( 12, .25, 0.15);
+            robot.drive( -12, 0.25, 0.15);
+            robot.strafe(-12, 0.25, 0.15);
         }
     }
 }
