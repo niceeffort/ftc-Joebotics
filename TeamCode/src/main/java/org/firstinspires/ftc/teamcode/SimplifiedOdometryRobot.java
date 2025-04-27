@@ -181,7 +181,8 @@ public class SimplifiedOdometryRobot {
         //rawHeading  = orientation.getYaw(AngleUnit.DEGREES);
         //turnRate    = angularVelocity.zRotationRate;
         // Pinpoint
-        rawHeading  = pinpoint.getHeading(AngleUnit.DEGREES);
+        Pose2D pos = pinpoint.getPosition();
+        rawHeading  = pos.getHeading(AngleUnit.DEGREES);
         heading     = rawHeading - headingOffset;
         turnRate    = pinpoint.getHeadingVelocity(UnnormalizedAngleUnit.DEGREES);
 
