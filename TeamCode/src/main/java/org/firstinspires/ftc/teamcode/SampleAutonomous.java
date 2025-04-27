@@ -47,7 +47,7 @@ public class SampleAutonomous extends LinearOpMode
             robot.drive(  12, 0.25, 0.25);
             robot.turnTo(270, 0.25, 0.5);
             robot.drive(  12, 0.25, 0.25);
-            robot.turnTo(0, 0.45, 0.5);
+            robot.turnTo(0, .25, 0.5);
 
             sleep(500);
 
