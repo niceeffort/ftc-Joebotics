@@ -28,10 +28,10 @@ public class SimplifiedOdometryRobot {
     // TODO: Check this later
     // I think we can just get the units in inches
     //private final double ODOM_INCHES_PER_COUNT   = 0.002969;   //  GoBilda Odometry Pod (1/226.8)
-
+    private final double ODOM_INCHES_PER_COUNT   = 0.00207;
     // These can be set in pinpoint
-    //private final boolean INVERT_DRIVE_ODOMETRY  = true;       //  When driving FORWARD, the odometry value MUST increase.  If it does not, flip the value of this constant.
-    //private final boolean INVERT_STRAFE_ODOMETRY = true;       //  When strafing to the LEFT, the odometry value MUST increase.  If it does not, flip the value of this constant.
+    private final boolean INVERT_DRIVE_ODOMETRY  = false;       //  When driving FORWARD, the odometry value MUST increase.  If it does not, flip the value of this constant.
+    private final boolean INVERT_STRAFE_ODOMETRY = true;       //  When strafing to the LEFT, the odometry value MUST increase.  If it does not, flip the value of this constant.
 
     private static final double DRIVE_GAIN          = 0.03;    // Strength of axial position control
     private static final double DRIVE_ACCEL         = 2.0;     // Acceleration limit.  Percent Power change per second.  1.0 = 0-100% power in 1 sec.
@@ -112,11 +112,11 @@ public class SimplifiedOdometryRobot {
 
         pinpoint = myOpMode.hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
 
-        //TODO: Reverse encoders if necessary
-        pinpoint.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.REVERSED);
+        //This will not work because we are ready
+        //pinpoint.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
 
-        //TODO: Set pinpoint offsets
-        pinpoint.setOffsets(-1, 8, DistanceUnit.INCH);
+        //I don't think these matter for how we are using this
+        //pinpoint.setOffsets(-1, 8, DistanceUnit.INCH);
 
         //  Connect to the encoder channels using the name of that channel.
         //driveEncoder = myOpMode.hardwareMap.get(DcMotor.class, "axial");
@@ -167,12 +167,14 @@ public class SimplifiedOdometryRobot {
         Pose2D pos = pinpoint.getPosition();
 
         // The inversions are set in the pinpoint device
-        rawDriveOdometer = pos.getX(DistanceUnit.INCH);// * (INVERT_DRIVE_ODOMETRY ? -1 : 1);
-        rawStrafeOdometer = pos.getY(DistanceUnit.INCH);// * (INVERT_STRAFE_ODOMETRY ? -1 : 1);
+        //rawDriveOdometer = pos.getX(DistanceUnit.INCH);// * (INVERT_DRIVE_ODOMETRY ? -1 : 1);
+        rawDriveOdometer = pinpoint.getEncoderX() * (INVERT_DRIVE_ODOMETRY ? -1 : 1);
+        //rawStrafeOdometer = pos.getY(DistanceUnit.INCH);//
+        rawStrafeOdometer = pinpoint.getEncoderY() * (INVERT_STRAFE_ODOMETRY ? -1 : 1);
 
         // We requested the units in inches so no need to convert
-        driveDistance = (rawDriveOdometer - driveOdometerOffset);// * ODOM_INCHES_PER_COUNT;
-        strafeDistance = (rawStrafeOdometer - strafeOdometerOffset);// * ODOM_INCHES_PER_COUNT;
+        driveDistance = (rawDriveOdometer - driveOdometerOffset) * ODOM_INCHES_PER_COUNT;
+        strafeDistance = (rawStrafeOdometer - strafeOdometerOffset) * ODOM_INCHES_PER_COUNT;
 
         //YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
         //AngularVelocity angularVelocity = imu.getRobotAngularVelocity(AngleUnit.DEGREES);
