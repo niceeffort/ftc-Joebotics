@@ -25,11 +25,9 @@ import java.util.List;
 
 public class SimplifiedOdometryRobot {
     // Adjust these numbers to suit your robot.
-    // TODO: Check this later
-    // I think we can just get the units in inches
     //private final double ODOM_INCHES_PER_COUNT   = 0.002969;   //  GoBilda Odometry Pod (1/226.8)
-    private final double ODOM_INCHES_PER_COUNT   = 0.00207;
-    // These can be set in pinpoint
+    private final double ODOM_INCHES_PER_COUNT   = 0.001978956;      // Gobilda Pinpoint 4 Bar is 19.89436789f ticks per MM and there are 25.4mm inch
+
     private final boolean INVERT_DRIVE_ODOMETRY  = false;       //  When driving FORWARD, the odometry value MUST increase.  If it does not, flip the value of this constant.
     private final boolean INVERT_STRAFE_ODOMETRY = true;       //  When strafing to the LEFT, the odometry value MUST increase.  If it does not, flip the value of this constant.
 
@@ -69,9 +67,9 @@ public class SimplifiedOdometryRobot {
     private DcMotor leftBackDrive;      //  control the left back drive wheel
     private DcMotor rightBackDrive;     //  control the right back drive wheel
 
+    // We don't need these because we will be calling pinpoint directly
     //private DcMotor driveEncoder;       //  the Axial (front/back) Odometry Module (may overlap with motor, or may not)
     //private DcMotor strafeEncoder;      //  the Lateral (left/right) Odometry Module (may overlap with motor, or may not)
-
     private GoBildaPinpointDriver pinpoint;
 
     private LinearOpMode myOpMode;
@@ -102,7 +100,7 @@ public class SimplifiedOdometryRobot {
     public void initialize(boolean showTelemetry)
     {
         // Initialize the hardware variables. Note that the strings used to 'get' each
-        // motor/device must match the names assigned during the robot configuration.
+        // TODO: motor/device must match the names assigned during the robot configuration.
 
         // !!!  Set the drive direction to ensure positive power drives each wheel forward.
         leftFrontDrive  = setupDriveMotor("ft_lt", DcMotor.Direction.REVERSE);
@@ -112,13 +110,13 @@ public class SimplifiedOdometryRobot {
 
         pinpoint = myOpMode.hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
 
-        //This will not work because we are ready
+        //This will not work because we are reading the raw data from the encoders
         //pinpoint.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
 
         //I don't think these matter for how we are using this
         //pinpoint.setOffsets(-1, 8, DistanceUnit.INCH);
 
-        //  Connect to the encoder channels using the name of that channel.
+        //  We are using pinpoint so we will access the values through that interface
         //driveEncoder = myOpMode.hardwareMap.get(DcMotor.class, "axial");
         //strafeEncoder = myOpMode.hardwareMap.get(DcMotor.class, "lateral");
 
@@ -129,10 +127,12 @@ public class SimplifiedOdometryRobot {
         }
 
         // Tell the software how the Control Hub is mounted on the robot to align the IMU XYZ axes correctly
+        /* We don't need this because we are using pinpoint
         RevHubOrientationOnRobot orientationOnRobot =
                 new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.UP,
                                              RevHubOrientationOnRobot.UsbFacingDirection.FORWARD);
-        //imu.initialize(new IMU.Parameters(orientationOnRobot));
+        imu.initialize(new IMU.Parameters(orientationOnRobot));*/
+
         pinpoint.resetPosAndIMU();
 
         // zero out all the odometry readings.
@@ -164,12 +164,12 @@ public class SimplifiedOdometryRobot {
      */
     public boolean readSensors() {
         pinpoint.update();
-        Pose2D pos = pinpoint.getPosition();
 
-        // The inversions are set in the pinpoint device
+        // We need the raw encoder values from pinpoint for this to work
         //rawDriveOdometer = pos.getX(DistanceUnit.INCH);// * (INVERT_DRIVE_ODOMETRY ? -1 : 1);
-        rawDriveOdometer = pinpoint.getEncoderX() * (INVERT_DRIVE_ODOMETRY ? -1 : 1);
         //rawStrafeOdometer = pos.getY(DistanceUnit.INCH);//
+        // Pinpoint
+        rawDriveOdometer = pinpoint.getEncoderX() * (INVERT_DRIVE_ODOMETRY ? -1 : 1);
         rawStrafeOdometer = pinpoint.getEncoderY() * (INVERT_STRAFE_ODOMETRY ? -1 : 1);
 
         // We requested the units in inches so no need to convert
@@ -178,16 +178,14 @@ public class SimplifiedOdometryRobot {
 
         //YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
         //AngularVelocity angularVelocity = imu.getRobotAngularVelocity(AngleUnit.DEGREES);
-
         //rawHeading  = orientation.getYaw(AngleUnit.DEGREES);
-        rawHeading  = pos.getHeading(AngleUnit.DEGREES);
-        heading     = rawHeading - headingOffset;
         //turnRate    = angularVelocity.zRotationRate;
+        // Pinpoint
+        rawHeading  = pinpoint.getHeading(AngleUnit.DEGREES);
+        heading     = rawHeading - headingOffset;
         turnRate    = pinpoint.getHeadingVelocity(UnnormalizedAngleUnit.DEGREES);
 
         if (showTelemetry) {
-            myOpMode.telemetry.addData("Raw Drive, Drive Offset:", "%6f %6f", rawDriveOdometer, driveOdometerOffset);
-            myOpMode.telemetry.addData("Raw Strafe, Strafe Offset:", "%6f %6f", rawStrafeOdometer, strafeOdometerOffset);
             myOpMode.telemetry.addData("Odom Ax:Lat", "%6f %6f", rawDriveOdometer - driveOdometerOffset, rawStrafeOdometer - strafeOdometerOffset);
             myOpMode.telemetry.addData("Dist Ax:Lat", "%5.2f %5.2f", driveDistance, strafeDistance);
             myOpMode.telemetry.addData("Head Deg:Rate", "%5.2f %5.2f", heading, turnRate);
@@ -214,9 +212,7 @@ public class SimplifiedOdometryRobot {
         while (myOpMode.opModeIsActive() && readSensors()){
 
             // implement desired axis powers
-            double strafe_output = strafeController.getOutput(strafeDistance);
-            myOpMode.telemetry.addData("Strafe Controller Output:", strafe_output);
-            moveRobot(driveController.getOutput(driveDistance), strafe_output /*strafeController.getOutput(strafeDistance)*/, yawController.getOutput(heading));
+            moveRobot(driveController.getOutput(driveDistance), strafeController.getOutput(strafeDistance), yawController.getOutput(heading));
 
             // Time to exit?
             if (driveController.inPosition() && yawController.inPosition()) {
