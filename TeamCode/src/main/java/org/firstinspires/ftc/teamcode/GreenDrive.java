@@ -3,7 +3,9 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -22,20 +24,23 @@ public class GreenDrive extends LinearOpMode{
         DcMotor ft_lt = hardwareMap.dcMotor.get("front_left_motor");
         DcMotor ft_rt = hardwareMap.dcMotor.get("front_right_motor");
         DcMotor bk_rt = hardwareMap.dcMotor.get("back_right_motor");
-        DcMotor arm = hardwareMap.dcMotor.get("arm");
+        CRServo arm = hardwareMap.crservo.get("arm");
         Servo claw = hardwareMap.servo.get("claw");
-        DcMotor riser = hardwareMap.dcMotor.get("riser");
+        DcMotor lift_l = hardwareMap.dcMotor.get("left_lift");
+        DcMotor lift_r = hardwareMap.dcMotor.get("right_lift");
+
         //Temporary
         //riser.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-       // riser.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //riser.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         // This part may be robot dependant
         bk_lt.setDirection(DcMotor.Direction.REVERSE);
         ft_lt.setDirection(DcMotor.Direction.REVERSE);
+        lift_r.setDirection(DcMotorSimple.Direction.REVERSE);
 
         //Set arm brake behavior
-        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        riser.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        lift_l.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        lift_r.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // The IMU will be used for field centric driving
         IMU imu = hardwareMap.get(IMU.class, "imu");
@@ -62,8 +67,9 @@ public class GreenDrive extends LinearOpMode{
             double ft_rt_power = -left_stick_x + left_stick_y + triggers;
             double bk_rt_power = left_stick_x + left_stick_y + triggers;
 
-            //Riser code
-            riser.setPower(riserPower);
+            //Riser code (updated)
+            lift_l.setPower(riserPower);
+            lift_r.setPower(riserPower);
 
             //Arm code
             arm.setPower(armPower);
@@ -77,8 +83,9 @@ public class GreenDrive extends LinearOpMode{
 
             //Print claw and arm position
             telemetry.addData("Claw position", claw.getPosition());
-            telemetry.addData("Riser position", riser.getCurrentPosition());
-            telemetry.addData("Arm position", arm.getCurrentPosition());
+            telemetry.addData("Riser position one", lift_l.getCurrentPosition());
+            telemetry.addData("Riser position two", lift_r.getCurrentPosition());
+            //telemetry.addData("Arm position", arm.getCurrentPosition());
             telemetry.update();
 
             //double botHeading = imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle;
