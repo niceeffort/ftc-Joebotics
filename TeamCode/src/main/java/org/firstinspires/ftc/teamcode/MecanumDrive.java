@@ -128,7 +128,6 @@ public final class MecanumDrive {
         private int lastLeftFrontPos, lastLeftBackPos, lastRightBackPos, lastRightFrontPos;
         private Rotation2d lastHeading;
         private boolean initialized;
-        private Pose2d pose;
 
         public DriveLocalizer(Pose2d pose) {
             leftFront = new OverflowEncoder(new RawEncoder(MecanumDrive.this.leftFront));
