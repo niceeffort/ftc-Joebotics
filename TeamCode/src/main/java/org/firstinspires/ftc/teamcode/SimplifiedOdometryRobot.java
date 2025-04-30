@@ -23,6 +23,7 @@ public class SimplifiedOdometryRobot {
     //private final double ODOM_INCHES_PER_COUNT   = 0.002969;   //  GoBilda Odometry Pod (1/226.8)
     private final double ODOM_INCHES_PER_COUNT   = 0.001978956;      // Gobilda Pinpoint 4 Bar is 19.89436789f ticks per MM and there are 25.4mm inch
 
+    // TODO: Invert the odometry wheels if needed
     private final boolean INVERT_DRIVE_ODOMETRY  = false;       //  When driving FORWARD, the odometry value MUST increase.  If it does not, flip the value of this constant.
     private final boolean INVERT_STRAFE_ODOMETRY = true;       //  When strafing to the LEFT, the odometry value MUST increase.  If it does not, flip the value of this constant.
 
@@ -96,8 +97,7 @@ public class SimplifiedOdometryRobot {
     {
         // Initialize the hardware variables. Note that the strings used to 'get' each
         // TODO: motor/device must match the names assigned during the robot configuration.
-
-        // !!!  Set the drive direction to ensure positive power drives each wheel forward.
+        // TODO: Set the drive direction to ensure positive power drives each wheel forward.
         leftFrontDrive = setupDriveMotor("front_left_motor", DcMotor.Direction.REVERSE);
         rightFrontDrive = setupDriveMotor("front_right_motor", DcMotor.Direction.FORWARD);
         leftBackDrive = setupDriveMotor( "back_left_motor", DcMotor.Direction.REVERSE);
