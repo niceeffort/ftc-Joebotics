@@ -17,4 +17,8 @@ public class Intake {
 
     public enum intakePos {IN, OUT};
     private final double[] intakePowers = new double[]{};
+
+    public Intake(HardwareMap hardwareMap) {
+        intakeServo = hardwareMap.get(Servo.class, "intake_servo");
+    }
 }
