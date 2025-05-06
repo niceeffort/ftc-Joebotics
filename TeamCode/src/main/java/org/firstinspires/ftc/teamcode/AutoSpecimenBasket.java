@@ -16,7 +16,7 @@ public class AutoSpecimenBasket extends LinearOpMode {
         Pose2d beginPose = new Pose2d(10, 60, Math.toRadians(-90));
         MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
 
-        Riser myRiser = new Riser(hardwareMap);
+        Lift myLift = new Lift(hardwareMap);
         Arm myArm = new Arm(hardwareMap);
         Claw myClaw = new Claw(hardwareMap);
 
@@ -45,25 +45,25 @@ public class AutoSpecimenBasket extends LinearOpMode {
 
         Actions.runBlocking(new SequentialAction(
                 driveForward.build(),
-                myRiser.setPosition(Riser.RiserPosition.HIGH_BAR),
+                myLift.setPosition(Lift.LiftPosition.HIGH_BAR),
                 driveToBar.build(),
-                myRiser.setPosition(Riser.RiserPosition.BOTTOM),
+                myLift.setPosition(Lift.LiftPosition.BOTTOM),
                 driveLeft.build(),
                 myClaw.setPosition(Claw.ClawPosition.OPEN),
                 myArm.setPosition(Arm.ArmPosition.DOWN),
                 myClaw.setPosition(Claw.ClawPosition.CLOSE),
                 myArm.setPosition(Arm.ArmPosition.UP),
                 faceBasket.build(),
-                myRiser.setPosition(Riser.RiserPosition.TOP),
+                myLift.setPosition(Lift.LiftPosition.TOP),
                 driveToBasket.build(),
                 myArm.setPosition(Arm.ArmPosition.DOWN),
                 myClaw.setPosition(Claw.ClawPosition.OPEN),
                 myClaw.setPosition(Claw.ClawPosition.CLOSE),
                 myArm.setPosition(Arm.ArmPosition.UP),
-                myRiser.setPosition(Riser.RiserPosition.BOTTOM),
+                myLift.setPosition(Lift.LiftPosition.BOTTOM),
                 faceSubmersible.build(),
                 driveToSubmersible.build(),
-                myRiser.setPosition(Riser.RiserPosition.TOP),
+                myLift.setPosition(Lift.LiftPosition.TOP),
                 myArm.setPosition(Arm.ArmPosition.DOWN)
         ));
     }

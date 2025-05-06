@@ -29,10 +29,6 @@ public class GreenDrive extends LinearOpMode{
         DcMotor lift_l = hardwareMap.dcMotor.get("left_lift");
         DcMotor lift_r = hardwareMap.dcMotor.get("right_lift");
 
-        //Temporary
-        //riser.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //riser.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
         // This part may be robot dependant
         bk_lt.setDirection(DcMotor.Direction.REVERSE);
         ft_lt.setDirection(DcMotor.Direction.REVERSE);
@@ -57,7 +53,7 @@ public class GreenDrive extends LinearOpMode{
             double armPower = gamepad2.left_stick_y;
             boolean closeClaw = gamepad2.a;
             boolean openClaw = gamepad2.y;
-            double riserPower = gamepad2.right_trigger - gamepad2.left_trigger;
+            double liftPower = gamepad2.right_trigger - gamepad2.left_trigger;
 
 
             //Motor power!
@@ -67,9 +63,9 @@ public class GreenDrive extends LinearOpMode{
             double ft_rt_power = -left_stick_x + left_stick_y + triggers;
             double bk_rt_power = left_stick_x + left_stick_y + triggers;
 
-            //Riser code (updated)
-            lift_l.setPower(riserPower);
-            lift_r.setPower(riserPower);
+            //Lift code (updated)
+            lift_l.setPower(liftPower);
+            lift_r.setPower(liftPower);
 
             //Arm code
             arm.setPower(armPower);
@@ -83,8 +79,8 @@ public class GreenDrive extends LinearOpMode{
 
             //Print claw and arm position
             telemetry.addData("Claw position", claw.getPosition());
-            telemetry.addData("Riser position one", lift_l.getCurrentPosition());
-            telemetry.addData("Riser position two", lift_r.getCurrentPosition());
+            telemetry.addData("Lift position one", lift_l.getCurrentPosition());
+            telemetry.addData("Lift position two", lift_r.getCurrentPosition());
             //telemetry.addData("Arm position", arm.getCurrentPosition());
             telemetry.update();
 

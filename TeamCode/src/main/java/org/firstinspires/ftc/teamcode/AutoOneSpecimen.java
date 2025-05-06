@@ -16,7 +16,7 @@ public class AutoOneSpecimen extends LinearOpMode {
         Pose2d beginPose = new Pose2d(10, 60, Math.toRadians(-90));
         MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
 
-        Riser myRiser = new Riser(hardwareMap);
+        Lift myLift = new Lift(hardwareMap);
         Arm myArm = new Arm(hardwareMap);
         Claw myClaw = new Claw(hardwareMap);
 
@@ -37,12 +37,12 @@ public class AutoOneSpecimen extends LinearOpMode {
         Actions.runBlocking(new SequentialAction(
                 myClaw.setPosition(Claw.ClawPosition.CLOSE),
                 driveForward.build(),
-                myRiser.setPosition(Riser.RiserPosition.HIGH_BAR),
+                myLift.setPosition(Lift.LiftPosition.HIGH_BAR),
                 driveToBar.build(),
-                myRiser.setPosition(Riser.RiserPosition.BOTTOM),
+                myLift.setPosition(Lift.LiftPosition.BOTTOM),
                 driveLeft.build(),
                 driveToSubmersible.build(),
-                myRiser.setPosition(Riser.RiserPosition.HIGH_BAR),
+                myLift.setPosition(Lift.LiftPosition.HIGH_BAR),
                 myArm.setPosition(Arm.ArmPosition.DOWN)
         ));
     }

@@ -16,7 +16,7 @@ public class RRObsZone extends LinearOpMode {
         Pose2d beginPose = new Pose2d(0, 60, Math.toRadians(-90));
         MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
 
-        Riser myRiser = new Riser(hardwareMap);
+        Lift myLift = new Lift(hardwareMap);
         Claw myClaw = new Claw(hardwareMap);
 
         TrajectoryActionBuilder drive_forward = drive.actionBuilder(beginPose).lineToY(35);
@@ -28,9 +28,9 @@ public class RRObsZone extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(myClaw.setPosition(Claw.ClawPosition.CLOSE),
                         drive_forward.build(),
-                        myRiser.setPosition(Riser.RiserPosition.HIGH_BAR),
+                        myLift.setPosition(Lift.LiftPosition.HIGH_BAR),
                         drive_to_bar.build(),
-                        myRiser.setPosition(Riser.RiserPosition.BOTTOM),
+                        myLift.setPosition(Lift.LiftPosition.BOTTOM),
                         drive_to_park.build()));
     }
 }

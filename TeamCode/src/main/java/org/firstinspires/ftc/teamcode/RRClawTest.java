@@ -11,8 +11,8 @@ public class RRClawTest extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         //Claw
         Claw myClaw = new Claw(hardwareMap);
-        //Riser
-        Riser myRiser = new Riser(hardwareMap);
+        //Lift
+        Lift myLift = new Lift(hardwareMap);
 
         waitForStart();
 
@@ -32,16 +32,16 @@ public class RRClawTest extends LinearOpMode {
         telemetry.addLine("Ending close");
         telemetry.update();
 
-        //Riser
+        //Lift
         telemetry.addLine("Starting up");
         telemetry.update();
-        Actions.runBlocking(myRiser.setPosition(Riser.RiserPosition.TOP));
+        Actions.runBlocking(myLift.setPosition(Lift.LiftPosition.TOP));
         telemetry.addLine("Ending up");
         telemetry.update();
         sleep(2000);
         telemetry.addLine("Starting down");
         telemetry.update();
-        Actions.runBlocking(myRiser.setPosition(Riser.RiserPosition.BOTTOM));
+        Actions.runBlocking(myLift.setPosition(Lift.LiftPosition.BOTTOM));
         sleep(2000);
         telemetry.addLine("Ending down");
         telemetry.update();

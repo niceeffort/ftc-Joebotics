@@ -18,7 +18,7 @@ public class AutoTwoSpecimenB extends LinearOpMode {
         Pose2d beginPose = new Pose2d(0, 60, Math.toRadians(-90));
         MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
 
-        Riser myRiser = new Riser(hardwareMap);
+        Lift myLift = new Lift(hardwareMap);
         Claw myClaw = new Claw(hardwareMap);
         Arm myArm = new Arm(hardwareMap);
 
@@ -44,11 +44,11 @@ public class AutoTwoSpecimenB extends LinearOpMode {
 
         Actions.runBlocking(new ParallelAction(
                 myClaw.setPosition(Claw.ClawPosition.CLOSE),
-                myRiser.setPosition(Riser.RiserPosition.HIGH_BAR)));
+                myLift.setPosition(Lift.LiftPosition.HIGH_BAR)));
 
         Actions.runBlocking(new SequentialAction(
                 driveForward.build(),
-                myRiser.setPosition(Riser.RiserPosition.BOTTOM),
+                myLift.setPosition(Lift.LiftPosition.BOTTOM),
                 driveToPickup.build()));
 
         Actions.runBlocking(new ParallelAction(
@@ -62,12 +62,12 @@ public class AutoTwoSpecimenB extends LinearOpMode {
 
         Actions.runBlocking(new ParallelAction(
                 myArm.setPosition(Arm.ArmPosition.UP),
-                myRiser.setPosition(Riser.RiserPosition.HIGH_BAR)));
+                myLift.setPosition(Lift.LiftPosition.HIGH_BAR)));
 
         Actions.runBlocking(new SequentialAction(
                 driveBackToBar.build(),
                 driveToBarTwo.build(),
-                myRiser.setPosition(Riser.RiserPosition.BOTTOM),
+                myLift.setPosition(Lift.LiftPosition.BOTTOM),
                 driveToPark.build()));
     }
 }

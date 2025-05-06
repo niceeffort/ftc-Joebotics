@@ -15,7 +15,7 @@ public class AutoBasketSub extends LinearOpMode {
         Pose2d beginPose = new Pose2d(0, 60, Math.toRadians(-90));
         MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
 
-        Riser myRiser = new Riser(hardwareMap);
+        Lift myLift = new Lift(hardwareMap);
         Claw myClaw = new Claw(hardwareMap);
         Arm myArm = new Arm(hardwareMap);
 
@@ -36,11 +36,11 @@ public class AutoBasketSub extends LinearOpMode {
 
         Actions.runBlocking(new SequentialAction(
                 driveToBasket.build(),
-                myRiser.setPosition(Riser.RiserPosition.HIGH_BAR),
+                myLift.setPosition(Lift.LiftPosition.HIGH_BAR),
                 myArm.setPosition(Arm.ArmPosition.DOWN),
                 myClaw.setPosition(Claw.ClawPosition.OPEN),
                 myArm.setPosition(Arm.ArmPosition.UP),
-                myRiser.setPosition(Riser.RiserPosition.BOTTOM),
+                myLift.setPosition(Lift.LiftPosition.BOTTOM),
                 driveToSub.build(),
                 touchBar.build(),
                 upToBar.build()
