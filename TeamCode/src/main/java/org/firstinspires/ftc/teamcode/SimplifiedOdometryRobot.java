@@ -7,42 +7,43 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.lynx.LynxModule;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
-import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
+import org.firstinspires.ftc.robotcore.external.navigation.UnnormalizedAngleUnit;
 
 import java.util.List;
 
 public class SimplifiedOdometryRobot {
     // Adjust these numbers to suit your robot.
-    private final double ODOM_INCHES_PER_COUNT = 0.002969;   //  GoBilda Odometry Pod (1/226.8)
-    private final boolean INVERT_DRIVE_ODOMETRY = true;       //  When driving FORWARD, the odometry value MUST increase.  If it does not, flip the value of this constant.
+    //private final double ODOM_INCHES_PER_COUNT   = 0.002969;   //  GoBilda Odometry Pod (1/226.8)
+    private final double ODOM_INCHES_PER_COUNT   = 0.001978956;      // Gobilda Pinpoint 4 Bar is 19.89436789f ticks per MM and there are 25.4mm inch
+
+    // TODO: Invert the odometry wheels if needed
+    private final boolean INVERT_DRIVE_ODOMETRY  = false;       //  When driving FORWARD, the odometry value MUST increase.  If it does not, flip the value of this constant.
     private final boolean INVERT_STRAFE_ODOMETRY = true;       //  When strafing to the LEFT, the odometry value MUST increase.  If it does not, flip the value of this constant.
 
-    private static final double DRIVE_GAIN = 0.03;    // Strength of axial position control
-    private static final double DRIVE_ACCEL = 2.0;     // Acceleration limit.  Percent Power change per second.  1.0 = 0-100% power in 1 sec.
-    private static final double DRIVE_TOLERANCE = 0.5;     // Controller is is "inPosition" if position error is < +/- this amount
-    private static final double DRIVE_DEADBAND = 0.2;     // Error less than this causes zero output.  Must be smaller than DRIVE_TOLERANCE
-    private static final double DRIVE_MAX_AUTO = 0.6;     // "default" Maximum Axial power limit during autonomous
+    private static final double DRIVE_GAIN          = 0.03;    // Strength of axial position control
+    private static final double DRIVE_ACCEL         = 2.0;     // Acceleration limit.  Percent Power change per second.  1.0 = 0-100% power in 1 sec.
+    private static final double DRIVE_TOLERANCE     = 0.5;     // Controller is is "inPosition" if position error is < +/- this amount
+    private static final double DRIVE_DEADBAND      = 0.2;     // Error less than this causes zero output.  Must be smaller than DRIVE_TOLERANCE
+    private static final double DRIVE_MAX_AUTO      = 0.6;     // "default" Maximum Axial power limit during autonomous
 
-    private static final double STRAFE_GAIN = 0.03;    // Strength of lateral position control
-    private static final double STRAFE_ACCEL = 1.5;     // Acceleration limit.  Percent Power change per second.  1.0 = 0-100% power in 1 sec.
-    private static final double STRAFE_TOLERANCE = 0.5;     // Controller is is "inPosition" if position error is < +/- this amount
-    private static final double STRAFE_DEADBAND = 0.2;     // Error less than this causes zero output.  Must be smaller than DRIVE_TOLERANCE
-    private static final double STRAFE_MAX_AUTO = 0.6;     // "default" Maximum Lateral power limit during autonomous
+    private static final double STRAFE_GAIN         = 0.03;    // Strength of lateral position control
+    private static final double STRAFE_ACCEL        = 1.5;     // Acceleration limit.  Percent Power change per second.  1.0 = 0-100% power in 1 sec.
+    private static final double STRAFE_TOLERANCE    = 0.5;     // Controller is is "inPosition" if position error is < +/- this amount
+    private static final double STRAFE_DEADBAND     = 0.2;     // Error less than this causes zero output.  Must be smaller than DRIVE_TOLERANCE
+    private static final double STRAFE_MAX_AUTO     = 0.6;     // "default" Maximum Lateral power limit during autonomous
 
-    private static final double YAW_GAIN = 0.018;    // Strength of Yaw position control
-    private static final double YAW_ACCEL = 3.0;     // Acceleration limit.  Percent Power change per second.  1.0 = 0-100% power in 1 sec.
-    private static final double YAW_TOLERANCE = 1.0;     // Controller is is "inPosition" if position error is < +/- this amount
-    private static final double YAW_DEADBAND = 0.25;    // Error less than this causes zero output.  Must be smaller than DRIVE_TOLERANCE
-    private static final double YAW_MAX_AUTO = 0.6;     // "default" Maximum Yaw power limit during autonomous
+    private static final double YAW_GAIN            = 0.018;    // Strength of Yaw position control
+    private static final double YAW_ACCEL           = 3.0;     // Acceleration limit.  Percent Power change per second.  1.0 = 0-100% power in 1 sec.
+    private static final double YAW_TOLERANCE       = 1.0;     // Controller is is "inPosition" if position error is < +/- this amount
+    private static final double YAW_DEADBAND        = 0.25;    // Error less than this causes zero output.  Must be smaller than DRIVE_TOLERANCE
+    private static final double YAW_MAX_AUTO        = 0.6;     // "default" Maximum Yaw power limit during autonomous
 
     // Public Members
     public double driveDistance = 0; // scaled axial distance (+ = forward)
@@ -62,19 +63,21 @@ public class SimplifiedOdometryRobot {
     private DcMotor leftBackDrive;      // control the left back drive wheel
     private DcMotor rightBackDrive;     // control the right back drive wheel
 
-    private DcMotor driveEncoder;       // the Axial (front/back) Odometry Module (may overlap with motor, or may not)
-    private DcMotor strafeEncoder;      // the Lateral (left/right) Odometry Module (may overlap with motor, or may not)
+    // We don't need these because we will be calling pinpoint directly
+    //private DcMotor driveEncoder;       //  the Axial (front/back) Odometry Module (may overlap with motor, or may not)
+    //private DcMotor strafeEncoder;      //  the Lateral (left/right) Odometry Module (may overlap with motor, or may not)
+    private GoBildaPinpointDriver pinpoint;
 
     private LinearOpMode myOpMode;
-    private IMU imu;
+    //private IMU imu;
     private ElapsedTime holdTimer = new ElapsedTime();  // User for any motion requiring a hold time or timeout.
 
-    private int rawDriveOdometer = 0; // Unmodified axial odometer count
-    private int driveOdometerOffset = 0; // Used to offset axial odometer
-    private int rawStrafeOdometer = 0; // Unmodified lateral odometer count
-    private int strafeOdometerOffset = 0; // Used to offset lateral odometer
-    private double rawHeading = 0; // Unmodified heading (degrees)
-    private double headingOffset = 0; // Used to offset heading
+    private double rawDriveOdometer     = 0; // Unmodified axial odometer count
+    private double driveOdometerOffset  = 0; // Used to offset axial odometer
+    private double rawStrafeOdometer    = 0; // Unmodified lateral odometer count
+    private double strafeOdometerOffset = 0; // Used to offset lateral odometer
+    private double rawHeading       = 0; // Unmodified heading (degrees)
+    private double headingOffset    = 0; // Used to offset heading
 
     private double turnRate = 0; // Latest Robot Turn Rate from IMU
     private boolean showTelemetry = false;
@@ -93,18 +96,23 @@ public class SimplifiedOdometryRobot {
     public void initialize(boolean showTelemetry)
     {
         // Initialize the hardware variables. Note that the strings used to 'get' each
-        // motor/device must match the names assigned during the robot configuration.
-
-        // !!!  Set the drive direction to ensure positive power drives each wheel forward.
+        // TODO: motor/device must match the names assigned during the robot configuration.
+        // TODO: Set the drive direction to ensure positive power drives each wheel forward.
         leftFrontDrive = setupDriveMotor("front_left_motor", DcMotor.Direction.REVERSE);
         rightFrontDrive = setupDriveMotor("front_right_motor", DcMotor.Direction.FORWARD);
         leftBackDrive = setupDriveMotor( "back_left_motor", DcMotor.Direction.REVERSE);
         rightBackDrive = setupDriveMotor( "back_right_motor",DcMotor.Direction.FORWARD);
-        imu = myOpMode.hardwareMap.get(IMU.class,"imu");
+        pinpoint = myOpMode.hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
 
-        //  Connect to the encoder channels using the name of that channel.
-        driveEncoder = myOpMode.hardwareMap.get(DcMotor.class, "axial");
-        strafeEncoder = myOpMode.hardwareMap.get(DcMotor.class, "lateral");
+        //This will not work because we are reading the raw data from the encoders
+        //pinpoint.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
+
+        //I don't think these matter for how we are using this
+        //pinpoint.setOffsets(-1, 8, DistanceUnit.INCH);
+
+        //  We are using pinpoint so we will access the values through that interface
+        //driveEncoder = myOpMode.hardwareMap.get(DcMotor.class, "axial");
+        //strafeEncoder = myOpMode.hardwareMap.get(DcMotor.class, "lateral");
 
         // Set all hubs to use the AUTO Bulk Caching mode for faster encoder reads
         List<LynxModule> allHubs = myOpMode.hardwareMap.getAll(LynxModule.class);
@@ -113,10 +121,13 @@ public class SimplifiedOdometryRobot {
         }
 
         // Tell the software how the Control Hub is mounted on the robot to align the IMU XYZ axes correctly
+        /* We don't need this because we are using pinpoint
         RevHubOrientationOnRobot orientationOnRobot =
                 new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.UP,
-                        RevHubOrientationOnRobot.UsbFacingDirection.FORWARD);
-        imu.initialize(new IMU.Parameters(orientationOnRobot));
+                                             RevHubOrientationOnRobot.UsbFacingDirection.FORWARD);
+        imu.initialize(new IMU.Parameters(orientationOnRobot));*/
+
+        pinpoint.resetPosAndIMU();
 
         // zero out all the odometry readings.
         resetOdometry();
@@ -131,7 +142,6 @@ public class SimplifiedOdometryRobot {
      * @param direction   Desired direction to make the wheel run FORWARD with positive power input
      * @return the DcMotor object
      */
-
     private DcMotor setupDriveMotor(String deviceName, DcMotor.Direction direction) {
         DcMotor aMotor = myOpMode.hardwareMap.get(DcMotor.class, deviceName);
         aMotor.setDirection(direction);
@@ -146,22 +156,32 @@ public class SimplifiedOdometryRobot {
      * always return true so this can be used in "while" loop conditions
      * @return true
      */
-
     public boolean readSensors() {
-        rawDriveOdometer = driveEncoder.getCurrentPosition() * (INVERT_DRIVE_ODOMETRY ? -1 : 1);
-        rawStrafeOdometer = strafeEncoder.getCurrentPosition() * (INVERT_STRAFE_ODOMETRY ? -1 : 1);
+        pinpoint.update();
+
+        // We need the raw encoder values from pinpoint for this to work
+        //rawDriveOdometer = pos.getX(DistanceUnit.INCH);// * (INVERT_DRIVE_ODOMETRY ? -1 : 1);
+        //rawStrafeOdometer = pos.getY(DistanceUnit.INCH);//
+        // Pinpoint
+        rawDriveOdometer = pinpoint.getEncoderX() * (INVERT_DRIVE_ODOMETRY ? -1 : 1);
+        rawStrafeOdometer = pinpoint.getEncoderY() * (INVERT_STRAFE_ODOMETRY ? -1 : 1);
+
+        // We requested the units in inches so no need to convert
         driveDistance = (rawDriveOdometer - driveOdometerOffset) * ODOM_INCHES_PER_COUNT;
         strafeDistance = (rawStrafeOdometer - strafeOdometerOffset) * ODOM_INCHES_PER_COUNT;
 
-        YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
-        AngularVelocity angularVelocity = imu.getRobotAngularVelocity(AngleUnit.DEGREES);
-
-        rawHeading = orientation.getYaw(AngleUnit.DEGREES);
-        heading = rawHeading - headingOffset;
-        turnRate = angularVelocity.zRotationRate;
+        //YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
+        //AngularVelocity angularVelocity = imu.getRobotAngularVelocity(AngleUnit.DEGREES);
+        //rawHeading  = orientation.getYaw(AngleUnit.DEGREES);
+        //turnRate    = angularVelocity.zRotationRate;
+        // Pinpoint
+        Pose2D pos = pinpoint.getPosition();
+        rawHeading  = pos.getHeading(AngleUnit.DEGREES);
+        heading     = rawHeading - headingOffset;
+        turnRate    = pinpoint.getHeadingVelocity(UnnormalizedAngleUnit.DEGREES);
 
         if (showTelemetry) {
-            myOpMode.telemetry.addData("Odom Ax:Lat", "%6d %6d", rawDriveOdometer - driveOdometerOffset, rawStrafeOdometer - strafeOdometerOffset);
+            myOpMode.telemetry.addData("Odom Ax:Lat", "%6f %6f", rawDriveOdometer - driveOdometerOffset, rawStrafeOdometer - strafeOdometerOffset);
             myOpMode.telemetry.addData("Dist Ax:Lat", "%5.2f %5.2f", driveDistance, strafeDistance);
             myOpMode.telemetry.addData("Head Deg:Rate", "%5.2f %5.2f", heading, turnRate);
         }
@@ -176,7 +196,6 @@ public class SimplifiedOdometryRobot {
      * @param power Maximum power to apply.  This number should always be positive.
      * @param holdTime Minimum time (sec) required to hold the final position.  0 = no hold.
      */
-
     public void drive(double distanceInches, double power, double holdTime) {
         resetOdometry();
 
@@ -209,7 +228,6 @@ public class SimplifiedOdometryRobot {
      * @param power Maximum power to apply.  This number should always be positive.
      * @param holdTime Minimum time (sec) required to hold the final position.  0 = no hold.
      */
-
     public void strafe(double distanceInches, double power, double holdTime) {
         resetOdometry();
 
@@ -242,7 +260,6 @@ public class SimplifiedOdometryRobot {
      * @param power Maximum power to apply.  This number should always be positive.
      * @param holdTime Minimum time (sec) required to hold the final position.  0 = no hold.
      */
-
     public void turnTo(double headingDeg, double power, double holdTime) {
 
         yawController.reset(headingDeg, power);
@@ -429,7 +446,6 @@ class ProportionalControl {
      * @param setPoint
      * @param powerLimit
      */
-
     public void reset(double setPoint, double powerLimit) {
         liveOutputLimit = Math.abs(powerLimit);
         this.setPoint = setPoint;
@@ -440,7 +456,6 @@ class ProportionalControl {
      * Saves a new setpoint and resets the output power history.
      * @param setPoint
      */
-
     public void reset(double setPoint) {
         liveOutputLimit = defaultOutputLimit;
         this.setPoint = setPoint;
@@ -450,7 +465,6 @@ class ProportionalControl {
     /**
      * Leave everything else the same, Just restart the acceleration timer and set output to 0
      */
-
     public void reset() {
         cycleTime.reset();
         inPosition = false;
