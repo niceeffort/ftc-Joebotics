@@ -74,7 +74,7 @@ public class GreenDrive extends LinearOpMode{
             if (closeClaw) {
                 claw.setPosition(0.05);
             } else if (openClaw) {
-                claw.setPosition(.5);
+                claw.setPosition(1);
             }
 
             //Print claw and arm position
