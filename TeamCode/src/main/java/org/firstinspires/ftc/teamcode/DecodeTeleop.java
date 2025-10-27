@@ -5,9 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
-import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 @TeleOp(name = "DecodeTeleop")
@@ -26,7 +24,7 @@ public class DecodeTeleop extends LinearOpMode{
         DcMotor bk_rt = hardwareMap.dcMotor.get("back_right_motor");
         DcMotor ft_pr = hardwareMap.dcMotor.get("front_pitcher");
         DcMotor bk_pr = hardwareMap.dcMotor.get("back_pitcher");
-        Servo cam = hardwareMap.servo.get("cam");
+        CRServo cam = hardwareMap.crservo.get("cam");
 
         // This part may be robot dependant
         bk_lt.setDirection(DcMotor.Direction.REVERSE);
@@ -45,6 +43,9 @@ public class DecodeTeleop extends LinearOpMode{
             double left_stick_x = gamepad1.left_stick_x;
             double left_stick_y = -gamepad1.left_stick_y;
             double triggers = gamepad1.left_trigger - gamepad1.right_trigger;
+            double pitcherPower = gamepad2.left_stick_y;
+            double camPower = gamepad2.right_stick_y;
+
 
             //Motor power!
             if (Math.abs(triggers) < 0.05) triggers = 0;
@@ -52,6 +53,13 @@ public class DecodeTeleop extends LinearOpMode{
             double ft_lt_power = left_stick_x + left_stick_y - triggers;
             double ft_rt_power = -left_stick_x + left_stick_y + triggers;
             double bk_rt_power = left_stick_x + left_stick_y + triggers;
+
+            //Pitcher code
+            ft_pr.setPower(pitcherPower);
+            bk_pr.setPower(pitcherPower);
+
+            //Cam code
+            cam.setPower(camPower);
 
             //double botHeading = imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle;
             double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
