@@ -75,7 +75,6 @@ public class DecodeWhiteDrive extends LinearOpMode{
                 if (gamepad1.start) {
                     imu.resetYaw();
                 }
-
                 double rotX = left_stick_x * Math.cos(-botHeading) - left_stick_y * Math.sin(-botHeading);
                 double rotY = left_stick_x * Math.sin(-botHeading) + left_stick_y * Math.cos(-botHeading);
                 bk_lt_power = -rotX + rotY - triggers;
@@ -112,14 +111,11 @@ public class DecodeWhiteDrive extends LinearOpMode{
             ft_rt.setPower(ft_rt_power * powerFactor);
             bk_rt.setPower(bk_rt_power * powerFactor);
         }
-
         bk_lt.setPower(0);
         ft_lt.setPower(0);
         ft_rt.setPower(0);
         bk_rt.setPower(0);
-
     }
-
 }
 
 
