@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IMU;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
-@TeleOp(name = "DecodeTeleop")
-public class DecodeTeleop extends LinearOpMode{
+@TeleOp(name = "DecodeTeleopP")
+public class DecodeTeleopP extends LinearOpMode{
     @Override
     public void runOpMode() throws InterruptedException {
         boolean fieldCentric = false;
@@ -29,7 +29,10 @@ public class DecodeTeleop extends LinearOpMode{
         // This part may be robot dependant
         bk_lt.setDirection(DcMotor.Direction.REVERSE);
         ft_lt.setDirection(DcMotor.Direction.REVERSE);
-        // TODO: Reverse pitchers?
+        ft_pr.setDirection(DcMotor.Direction.REVERSE);
+        bk_pr.setDirection(DcMotor.Direction.REVERSE);
+        ft_pr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        bk_pr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // The IMU will be used for field centric driving
         IMU imu = hardwareMap.get(IMU.class, "imu");
@@ -43,9 +46,10 @@ public class DecodeTeleop extends LinearOpMode{
             double left_stick_x = gamepad1.left_stick_x;
             double left_stick_y = -gamepad1.left_stick_y;
             double triggers = gamepad1.left_trigger - gamepad1.right_trigger;
-            double pitcherPower = gamepad2.left_stick_y;
-            double camPower = gamepad2.right_stick_y;
-
+            boolean pitcherGo = gamepad2.y;
+            boolean pitcherStop = gamepad2.a;
+            boolean camGo = gamepad2.x;
+            boolean camStop = gamepad2.b;
 
             //Motor power!
             if (Math.abs(triggers) < 0.05) triggers = 0;
@@ -55,11 +59,20 @@ public class DecodeTeleop extends LinearOpMode{
             double bk_rt_power = left_stick_x + left_stick_y + triggers;
 
             //Pitcher code
-            ft_pr.setPower(pitcherPower);
-            bk_pr.setPower(pitcherPower);
+            if (pitcherGo) {
+                ft_pr.setPower(.5);
+                bk_pr.setPower(.5);
+            } else if (pitcherStop) {
+                ft_pr.setPower(0.0);
+                bk_pr.setPower(0.0);
+            }
 
             //Cam code
-            cam.setPower(camPower);
+            if (camGo) {
+                cam.setPower(.25);
+            } else if (camStop) {
+                cam.setPower(0);
+            }
 
             //double botHeading = imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle;
             double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
