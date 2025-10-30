@@ -19,7 +19,8 @@ public class ServoMotorTest extends LinearOpMode{
 
             boolean pitcherGo = gamepad2.y;
             boolean pitcherStop = gamepad2.a;
-            double camPower = gamepad2.right_stick_y;
+            boolean camGo = gamepad2.x;
+            boolean camStop = gamepad2.b;
 
             ft_pr.setDirection(DcMotor.Direction.REVERSE);
             bk_pr.setDirection(DcMotor.Direction.REVERSE);
@@ -29,14 +30,18 @@ public class ServoMotorTest extends LinearOpMode{
 
             //Pitcher code
             if (pitcherGo) {
-                ft_pr.setPower(10.0);
-                bk_pr.setPower(10.0);
+                ft_pr.setPower(.5);
+                bk_pr.setPower(.5);
             } else if (pitcherStop) {
                 ft_pr.setPower(0.0);
                 bk_pr.setPower(0.0);            }
 
             //Cam code
-            cam.setPower(camPower);
+            if (camGo) {
+                cam.setPower(.25);
+            } else if (camStop) {
+                cam.setPower(0);
+            }
         }
     }
 }
