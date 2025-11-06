@@ -69,7 +69,7 @@ public class DecodeTeleopP extends LinearOpMode{
 
             //Cam code
             if (camGo) {
-                cam.setPower(.25);
+                cam.setPower(.5);
             } else if (camStop) {
                 cam.setPower(0);
             }
