@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@TeleOp (name = "ServoTest")
-public class ServoTest extends LinearOpMode {
+@TeleOp (name = "CrServoTest")
+public class CrServoTest extends LinearOpMode {
 
     private CRServo con_servo; // declare private servo class
 

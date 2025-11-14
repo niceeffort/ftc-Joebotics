@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.Servo;
+
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 @TeleOp(name = "DecodeWhiteDrive")
@@ -29,6 +31,8 @@ public class DecodeWhiteDrive extends LinearOpMode{
         DcMotor ramp = hardwareMap.dcMotor.get("ramp");
         CRServo lt_i = hardwareMap.crservo.get("left_intake");
         CRServo rt_i = hardwareMap.crservo.get("right_intake");
+
+        Servo outServo;
 
         // This part may be robot dependant
         bk_lt.setDirection(DcMotor.Direction.REVERSE);
@@ -64,6 +68,30 @@ public class DecodeWhiteDrive extends LinearOpMode{
             //Intake code
             lt_i.setPower(intakePower);
             rt_i.setPower(intakePower);
+
+            //servo code
+
+            outServo = hardwareMap.servo.get("servo"); // imported servo class
+
+            if (gamepad1.left_bumper) {
+                outServo.setPosition(1);
+            }
+            if (gamepad1.right_bumper) {
+                outServo.setPosition(0);
+            }
+            if (gamepad1.atRest()) {
+                outServo.setPosition(0);
+            }
+            telemetry.update();
+
+            if (gamepad1.left_bumper) {
+                telemetry.addLine("pressing a");
+                telemetry.update();
+            }
+            if (gamepad1.right_bumper) {
+                telemetry.addLine("pressing b");
+                telemetry.update();
+            }
 
             //double botHeading = imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle;
             double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
