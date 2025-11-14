@@ -11,7 +11,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 public class MecanumDriveJB {
-    boolean fieldCentric = true;
+    boolean fieldCentric = false;
     LinearOpMode myOpMode;
     HardwareMap hardwareMap;
     Gamepad gamepad1;
