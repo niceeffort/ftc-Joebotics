@@ -16,10 +16,12 @@ public class    AutonomousBackstage extends LinearOpMode {
         bk_lt.setDirection(DcMotor.Direction.REVERSE);
         ft_lt.setDirection(DcMotor.Direction.REVERSE);
 
+        //sets power var to half power
         double power = .5;
         boolean done = false;
         waitForStart();
 
+        //sets motors to power, moves 1 sec
         while(opModeIsActive() && !done){
             bk_rt.setPower(power);
             bk_lt.setPower(power);

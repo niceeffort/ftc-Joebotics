@@ -32,6 +32,7 @@ public class DecodeWhiteDrive extends LinearOpMode{
         CRServo lt_i = hardwareMap.crservo.get("left_intake");
         CRServo rt_i = hardwareMap.crservo.get("right_intake");
 
+        // Declares outtake servo
         Servo outServo;
 
         // This part may be robot dependant
