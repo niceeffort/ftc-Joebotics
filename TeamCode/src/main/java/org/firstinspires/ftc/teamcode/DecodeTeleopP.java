@@ -50,6 +50,8 @@ public class DecodeTeleopP extends LinearOpMode{
             boolean pitcherStop = gamepad2.a;
             boolean camGo = gamepad2.x;
             boolean camStop = gamepad2.b;
+            boolean reverse = gamepad2.dpad_up;
+            boolean unReverse = gamepad2.dpad_down;
 
             //Motor power!
             if (Math.abs(triggers) < 0.05) triggers = 0;
@@ -72,6 +74,16 @@ public class DecodeTeleopP extends LinearOpMode{
                 cam.setPower(.5);
             } else if (camStop) {
                 cam.setPower(0);
+            }
+
+            if (reverse) {
+                ft_pr.setDirection(DcMotor.Direction.FORWARD);
+                bk_pr.setDirection(DcMotor.Direction.FORWARD);
+                cam.setDirection(CRServo.Direction.REVERSE);
+            } else if (unReverse) {
+                ft_pr.setDirection(DcMotor.Direction.REVERSE);
+                bk_pr.setDirection(DcMotor.Direction.REVERSE);
+                cam.setDirection(CRServo.Direction.FORWARD);
             }
 
             //double botHeading = imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle;
