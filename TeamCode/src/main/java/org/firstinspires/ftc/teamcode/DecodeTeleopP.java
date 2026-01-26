@@ -52,6 +52,7 @@ public class DecodeTeleopP extends LinearOpMode{
             boolean camStop = gamepad2.b;
             boolean reverse = gamepad2.dpad_up;
             boolean unReverse = gamepad2.dpad_down;
+            boolean driveFaster = gamepad1.a;
 
             //Motor power!
             if (Math.abs(triggers) < 0.05) triggers = 0;
@@ -60,10 +61,18 @@ public class DecodeTeleopP extends LinearOpMode{
             double ft_rt_power = -left_stick_x + left_stick_y + triggers;
             double bk_rt_power = left_stick_x + left_stick_y + triggers;
 
+            //Drive faster
+            if (driveFaster) {
+                bk_rt.setPower(100);
+                bk_lt.setPower(100);
+                ft_rt.setPower(100);
+                ft_lt.setPower(100);
+            }
+
             //Pitcher code
             if (pitcherGo) {
-                ft_pr.setPower(.5);
-                bk_pr.setPower(.5);
+                ft_pr.setPower(.6);
+                bk_pr.setPower(.6);
             } else if (pitcherStop) {
                 ft_pr.setPower(0.0);
                 bk_pr.setPower(0.0);
