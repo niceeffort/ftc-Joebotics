@@ -54,14 +54,14 @@ public class BioBuzzTeleop extends LinearOpMode {
 
             // Intake
             if (gamepad2.a) {
-                intake.setPower(0.6);
+                intake.setPower(0.8);
             } else if (gamepad2.b) {
                 intake.setPower(0.0);
             }
 
             //Launcher
             if (gamepad2.x) {
-                launcher.setPower(0.8);
+                launcher.setPower(0.9);
             } else if (gamepad2.y) {
                 launcher.setPower(0.0);
             }
