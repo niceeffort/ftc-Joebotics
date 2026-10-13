@@ -3,10 +3,13 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
-
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+
+//This is my Teleop code for my FTC robot. The pusher is not working. Please help.
 
 @TeleOp(name = "BioBuzzTeleop")
 public class BioBuzzTeleop extends LinearOpMode {
@@ -22,9 +25,12 @@ public class BioBuzzTeleop extends LinearOpMode {
         DcMotor ft_rt = hardwareMap.dcMotor.get("ft_rt");
         DcMotor ft_lt = hardwareMap.dcMotor.get("ft_lt");
         DcMotor intake = hardwareMap.dcMotor.get("intake");
+        DcMotor launcher = hardwareMap.dcMotor.get("launcher");
+        CRServo pusher = hardwareMap.crservo.get("pusher");
 
-        bk_lt.setDirection(DcMotor.Direction.REVERSE);
-        ft_lt.setDirection(DcMotor.Direction.REVERSE);
+        ft_lt.setDirection(DcMotorSimple.Direction.REVERSE);
+        bk_rt.setDirection(DcMotor.Direction.REVERSE);
+        launcher.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         IMU imu = hardwareMap.get(IMU.class, "imu");
 
@@ -45,14 +51,26 @@ public class BioBuzzTeleop extends LinearOpMode {
             double x = gamepad1.left_stick_x;
             double y = -gamepad1.left_stick_y;
             double rotation = gamepad1.left_trigger - gamepad1.right_trigger;
-            boolean intakeGo = gamepad2.a;
-            boolean intakeStop = gamepad2.b;
 
-            //Intake
-            if (intakeGo) {
-                intake.setPower(.6);
-            } else if (intakeStop) {
+            // Intake
+            if (gamepad2.a) {
+                intake.setPower(0.6);
+            } else if (gamepad2.b) {
                 intake.setPower(0.0);
+            }
+
+            //Launcher
+            if (gamepad2.x) {
+                launcher.setPower(0.8);
+            } else if (gamepad2.y) {
+                launcher.setPower(0.0);
+            }
+
+            // Pusher
+            if (gamepad2.dpad_up) {
+                pusher.setPower(1.0);   // Rotate continuously
+            } else if (gamepad2.dpad_down) {
+                pusher.setPower(0.0);   // Stop rotating
             }
 
             if (Math.abs(rotation) < 0.05) {
