@@ -41,13 +41,13 @@ public class SampleAuto extends LinearOpMode
 
             // Drive a large rectangle, turning at each corner
             robot.drive(  84, 0.60, 0.25);
-            robot.turnTo(90, 0.45, 0.5);
+            robot.turnTo(90);
             robot.drive(  72, 0.60, 0.25);
-            robot.turnTo(180, 0.45, 0.5);
+            robot.turnTo(180);
             robot.drive(  84, 0.60, 0.25);
-            robot.turnTo(270, 0.45, 0.5);
+            robot.turnTo(270);
             robot.drive(  72, 0.60, 0.25);
-            robot.turnTo(0, 0.45, 0.5);
+            robot.turnTo(0);
 
             sleep(500);
 

@@ -32,7 +32,7 @@ public class SampleAutonomous extends LinearOpMode
         telemetry.update();
 
         waitForStart();
-        //robot.resetHeading();  // Reset heading to set a baseline for Auto
+        robot.resetHeading();  // Reset heading to set a baseline for Auto
 
         // Run Auto if stop was not pressed.
         if (opModeIsActive())
@@ -41,13 +41,13 @@ public class SampleAutonomous extends LinearOpMode
 
             // Drive a large rectangle, turning at each corner
             robot.drive(  12, 0.25, 0.25);
-            robot.turnTo(90, .25, 0.5);
+            robot.turnTo(90);
             robot.drive(  12, 0.25, 0.25);
-            robot.turnTo(180, 0.25, 0.5);
+            robot.turnTo(180);
             robot.drive(  12, 0.25, 0.25);
-            robot.turnTo(270, 0.25, 0.5);
+            robot.turnTo(270);
             robot.drive(  12, 0.25, 0.25);
-            robot.turnTo(0, .25, 0.5);
+            robot.turnTo(0);
 
             sleep(500);
 
