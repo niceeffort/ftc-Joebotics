@@ -28,7 +28,7 @@ public class BioBuzzAuto1 extends LinearOpMode {
         if (opModeIsActive()){
 
             // Start launcher
-            myLauncher.setPower(0.3);
+            myLauncher.setPower(0.6);
 
             // Warm up for half a second
             sleep(500);
@@ -50,7 +50,7 @@ public class BioBuzzAuto1 extends LinearOpMode {
 
             // Drive left 55in
             // TODO: Check if this goes left or right
-            robot.strafe(-55, 0.60, .25);
+            //robot.strafe(-55, 0.60, .25);
         }
     }
 }
