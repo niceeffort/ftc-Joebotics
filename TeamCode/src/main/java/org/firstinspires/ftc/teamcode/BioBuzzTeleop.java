@@ -28,6 +28,7 @@ public class BioBuzzTeleop extends LinearOpMode {
         CRServo pusher = hardwareMap.crservo.get("pusher");
 
         // Set reverse and brake behavior
+        ft_lt.setDirection(DcMotorSimple.Direction.REVERSE);
         bk_lt.setDirection(DcMotorSimple.Direction.REVERSE);
         bk_rt.setDirection(DcMotor.Direction.REVERSE);
         launcher.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
