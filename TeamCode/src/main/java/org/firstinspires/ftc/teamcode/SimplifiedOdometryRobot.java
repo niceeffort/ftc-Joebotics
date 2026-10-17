@@ -1,20 +1,19 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 public class SimplifiedOdometryRobot {
 
-    // IMPORTANT: This is a placeholder.
-    // Calibrate this value for your motors, gearing, and wheels.
+    // Calibrate this for your motor, gearing, and wheel size.
     private static final double COUNTS_PER_INCH = 45.28;
-
     private static final double MAX_POWER = 0.6;
 
     private DcMotor leftFrontDrive;
@@ -23,19 +22,26 @@ public class SimplifiedOdometryRobot {
     private DcMotor rightBackDrive;
 
     private IMU imu;
-    private LinearOpMode myOpMode;
+    private final LinearOpMode myOpMode;
 
     public SimplifiedOdometryRobot(LinearOpMode opmode) {
         myOpMode = opmode;
     }
 
-    // Initialize the four drive motors.
+    // Initialize drive motors and IMU.
     public void initialize(boolean showTelemetry) {
 
-        leftFrontDrive = setupDriveMotor("front_left_motor", DcMotor.Direction.REVERSE);
-        rightFrontDrive = setupDriveMotor("front_right_motor", DcMotor.Direction.FORWARD);
-        leftBackDrive = setupDriveMotor("back_left_motor", DcMotor.Direction.REVERSE);
-        rightBackDrive = setupDriveMotor("back_right_motor", DcMotor.Direction.FORWARD);
+        leftFrontDrive = setupDriveMotor(
+                "front_left_motor", DcMotor.Direction.REVERSE);
+
+        rightFrontDrive = setupDriveMotor(
+                "front_right_motor", DcMotor.Direction.FORWARD);
+
+        leftBackDrive = setupDriveMotor(
+                "back_left_motor", DcMotor.Direction.REVERSE);
+
+        rightBackDrive = setupDriveMotor(
+                "back_right_motor", DcMotor.Direction.REVERSE);
 
         imu = myOpMode.hardwareMap.get(IMU.class, "imu");
 
@@ -47,10 +53,12 @@ public class SimplifiedOdometryRobot {
         ));
 
         imu.resetYaw();
-    }
 
-    public void resetHeading() {
-        imu.resetYaw();
+        if (showTelemetry) {
+            myOpMode.telemetry.addData("Robot", "Initialized");
+            myOpMode.telemetry.addData("IMU", "Ready");
+            myOpMode.telemetry.update();
+        }
     }
 
     private DcMotor setupDriveMotor(
@@ -60,16 +68,18 @@ public class SimplifiedOdometryRobot {
                 DcMotor.class, deviceName);
 
         motor.setDirection(direction);
-        motor.setZeroPowerBehavior(
-                DcMotor.ZeroPowerBehavior.BRAKE);
-
+        motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motor.setPower(0);
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         return motor;
     }
 
-    // Drive forward or backward a specified distance in inches.
+    public void resetHeading() {
+        imu.resetYaw();
+    }
+
     // Positive distance = forward.
     // Negative distance = backward.
     public void drive(double distanceInches,
@@ -89,7 +99,6 @@ public class SimplifiedOdometryRobot {
         );
     }
 
-    // Strafe left or right.
     // Positive distance = left.
     // Negative distance = right.
     public void strafe(double distanceInches,
@@ -118,6 +127,9 @@ public class SimplifiedOdometryRobot {
             double timeoutSeconds,
             double holdTime) {
 
+        // Stop before starting a new movement.
+        stopRobot();
+
         leftFrontDrive.setTargetPosition(lfTarget);
         rightFrontDrive.setTargetPosition(rfTarget);
         leftBackDrive.setTargetPosition(lbTarget);
@@ -138,70 +150,90 @@ public class SimplifiedOdometryRobot {
 
         ElapsedTime timer = new ElapsedTime();
 
-        while (myOpMode.opModeIsActive()
-                && timer.seconds() < timeoutSeconds
-                && (leftFrontDrive.isBusy()
-                || rightFrontDrive.isBusy()
-                || leftBackDrive.isBusy()
-                || rightBackDrive.isBusy())) {
-
-            myOpMode.idle();
-        }
-
-        // Stop if the targets are reached or the timeout expires.
-        stopRobot();
-
-        // Hold briefly at the target, if requested.
-        // Motors remain in RUN_TO_POSITION during this interval.
-        if (myOpMode.opModeIsActive()
-                && holdTime > 0
-                && timer.seconds() < timeoutSeconds) {
-
-            ElapsedTime holdTimer = new ElapsedTime();
-
+        try {
+            // Continue until every motor reaches its target,
+            // the timeout expires, or the OpMode is stopped.
             while (myOpMode.opModeIsActive()
-                    && holdTimer.seconds() < holdTime) {
+                    && timer.seconds() < timeoutSeconds
+                    && (leftFrontDrive.isBusy()
+                    || rightFrontDrive.isBusy()
+                    || leftBackDrive.isBusy()
+                    || rightBackDrive.isBusy())) {
+
+                myOpMode.telemetry.addData(
+                        "Front Left", "%d / %d",
+                        leftFrontDrive.getCurrentPosition(),
+                        lfTarget);
+
+                myOpMode.telemetry.addData(
+                        "Front Right", "%d / %d",
+                        rightFrontDrive.getCurrentPosition(),
+                        rfTarget);
+
+                myOpMode.telemetry.addData(
+                        "Back Left", "%d / %d",
+                        leftBackDrive.getCurrentPosition(),
+                        lbTarget);
+
+                myOpMode.telemetry.addData(
+                        "Back Right", "%d / %d",
+                        rightBackDrive.getCurrentPosition(),
+                        rbTarget);
+
+                myOpMode.telemetry.addData(
+                        "Drive time", "%.1f / %.1f",
+                        timer.seconds(), timeoutSeconds);
+
+                myOpMode.telemetry.update();
                 myOpMode.idle();
             }
+        } finally {
+            // Always remove power from all four drive motors.
+            stopRobot();
+
+            leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+
+        // Optional pause after the movement has stopped.
+        if (myOpMode.opModeIsActive() && holdTime > 0) {
+            myOpMode.sleep((long) (holdTime * 1000));
         }
 
         stopRobot();
-
-        leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public void stopRobot() {
-        leftFrontDrive.setPower(0);
-        rightFrontDrive.setPower(0);
-        leftBackDrive.setPower(0);
-        rightBackDrive.setPower(0);
+        if (leftFrontDrive != null) {
+            leftFrontDrive.setPower(0);
+        }
+        if (rightFrontDrive != null) {
+            rightFrontDrive.setPower(0);
+        }
+        if (leftBackDrive != null) {
+            leftBackDrive.setPower(0);
+        }
+        if (rightBackDrive != null) {
+            rightBackDrive.setPower(0);
+        }
     }
-    // Turn to a target heading in degrees.
-// Positive heading = counterclockwise.
-// Negative heading = clockwise.
+
+    // Positive heading = counterclockwise.
+    // Negative heading = clockwise.
     public void turnTo(double targetHeading) {
 
         ElapsedTime timer = new ElapsedTime();
-
         double error = getHeadingError(targetHeading);
 
-        // Stop when within 2 degrees, the OpMode stops,
-        // or 5 seconds have passed.
         while (myOpMode.opModeIsActive()
                 && Math.abs(error) > 2.0
                 && timer.seconds() < 5.0) {
 
-            // Adjust turning power based on the remaining angle.
             double turnPower = Range.clip(
-                    Math.abs(error) * 0.01,
-                    0.12,
-                    0.45
-            );
+                    Math.abs(error) * 0.01, 0.12, 0.45);
 
-            // Turn in the direction of the target.
             if (error > 0) {
                 leftFrontDrive.setPower(-turnPower);
                 leftBackDrive.setPower(-turnPower);
@@ -214,27 +246,25 @@ public class SimplifiedOdometryRobot {
                 rightBackDrive.setPower(-turnPower);
             }
 
-            myOpMode.telemetry.addData(
-                    "Heading", imu.getRobotYawPitchRollAngles()
-                            .getYaw(AngleUnit.DEGREES));
+            myOpMode.telemetry.addData("Heading", getHeading());
             myOpMode.telemetry.addData("Target", targetHeading);
             myOpMode.telemetry.addData("Error", error);
             myOpMode.telemetry.update();
 
             myOpMode.idle();
-
             error = getHeadingError(targetHeading);
         }
 
         stopRobot();
     }
 
-    // Calculate the shortest angular difference to the target.
-    private double getHeadingError(double targetHeading) {
-        double currentHeading = imu.getRobotYawPitchRollAngles()
+    private double getHeading() {
+        return imu.getRobotYawPitchRollAngles()
                 .getYaw(AngleUnit.DEGREES);
+    }
 
-        double error = targetHeading - currentHeading;
+    private double getHeadingError(double targetHeading) {
+        double error = targetHeading - getHeading();
 
         while (error > 180) {
             error -= 360;
