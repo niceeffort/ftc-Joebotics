@@ -19,10 +19,10 @@ public class BioBuzzTeleop extends LinearOpMode {
         boolean back_pressed = false;
 
         // Init motors
-        DcMotor bk_rt = hardwareMap.dcMotor.get("bk_rt");
-        DcMotor bk_lt = hardwareMap.dcMotor.get("bk_lt");
-        DcMotor ft_rt = hardwareMap.dcMotor.get("ft_rt");
-        DcMotor ft_lt = hardwareMap.dcMotor.get("ft_lt");
+        DcMotor bk_rt = hardwareMap.dcMotor.get("back_right_motor");
+        DcMotor bk_lt = hardwareMap.dcMotor.get("back_left_motor");
+        DcMotor ft_rt = hardwareMap.dcMotor.get("front_right_motor");
+        DcMotor ft_lt = hardwareMap.dcMotor.get("front_left_motor");
         DcMotor intake = hardwareMap.dcMotor.get("intake");
         DcMotor launcher = hardwareMap.dcMotor.get("launcher");
         CRServo pusher = hardwareMap.crservo.get("pusher");
@@ -60,9 +60,16 @@ public class BioBuzzTeleop extends LinearOpMode {
                 intake.setPower(0.0);
             }
 
+            //Reverse intake
+            if (gamepad2.left_bumper) {
+                intake.setPower(-.8);
+            } else if (gamepad2.right_bumper) {
+                intake.setPower(0.0);
+            }
+
             //Launcher
             if (gamepad2.x) {
-                launcher.setPower(0.9);
+                launcher.setPower(0.6);
             } else if (gamepad2.y) {
                 launcher.setPower(0.0);
             }
@@ -72,6 +79,13 @@ public class BioBuzzTeleop extends LinearOpMode {
                 pusher.setPower(1.0);   // Rotate continuously
             } else if (gamepad2.dpad_down) {
                 pusher.setPower(0.0);   // Stop rotating
+            }
+
+            //Reverse pusher
+            if (gamepad2.dpad_left) {
+                pusher.setPower(-1.0);
+            } else if (gamepad2.dpad_right) {
+                pusher.setPower(0.0);
             }
 
             if (Math.abs(rotation) < 0.05) {
@@ -87,6 +101,11 @@ public class BioBuzzTeleop extends LinearOpMode {
             double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
 
             if (fieldCentric) {
+
+                if (gamepad1.start) {
+                    imu.resetYaw();
+                }
+
                 double newX = x * Math.cos(botHeading) + y * Math.sin(botHeading);
                 double newY = -x * Math.sin(botHeading) + y * Math.cos(botHeading);
                 x = newX;
