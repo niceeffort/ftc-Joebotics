@@ -9,8 +9,6 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
-//This is my Teleop code for my FTC robot. The pusher is not working. Please help.
-
 @TeleOp(name = "BioBuzzTeleop")
 public class BioBuzzTeleop extends LinearOpMode {
 
@@ -20,6 +18,7 @@ public class BioBuzzTeleop extends LinearOpMode {
         boolean fieldCentric = true;
         boolean back_pressed = false;
 
+        // Init motors
         DcMotor bk_rt = hardwareMap.dcMotor.get("bk_rt");
         DcMotor bk_lt = hardwareMap.dcMotor.get("bk_lt");
         DcMotor ft_rt = hardwareMap.dcMotor.get("ft_rt");
@@ -28,10 +27,12 @@ public class BioBuzzTeleop extends LinearOpMode {
         DcMotor launcher = hardwareMap.dcMotor.get("launcher");
         CRServo pusher = hardwareMap.crservo.get("pusher");
 
+        // Set reverse and brake behavior
         bk_lt.setDirection(DcMotorSimple.Direction.REVERSE);
         bk_rt.setDirection(DcMotor.Direction.REVERSE);
         launcher.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        // Init the IMU
         IMU imu = hardwareMap.get(IMU.class, "imu");
 
         IMU.Parameters parameters = new IMU.Parameters(
