@@ -17,10 +17,10 @@ public class DriveBotTeleop extends LinearOpMode {
         boolean fieldCentric = true;
         boolean back_pressed = false;
 
-        DcMotor bk_rt = hardwareMap.dcMotor.get("bk_rt");
-        DcMotor bk_lt = hardwareMap.dcMotor.get("bk_lt");
-        DcMotor ft_rt = hardwareMap.dcMotor.get("ft_rt");
-        DcMotor ft_lt = hardwareMap.dcMotor.get("ft_lt");
+        DcMotor bk_rt = hardwareMap.dcMotor.get("back_right_motor");
+        DcMotor bk_lt = hardwareMap.dcMotor.get("back_right_motor");
+        DcMotor ft_rt = hardwareMap.dcMotor.get("front_right_motor");
+        DcMotor ft_lt = hardwareMap.dcMotor.get("front_left_motor");
 
         bk_lt.setDirection(DcMotor.Direction.REVERSE);
         ft_lt.setDirection(DcMotor.Direction.REVERSE);
