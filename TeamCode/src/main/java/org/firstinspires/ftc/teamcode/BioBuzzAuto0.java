@@ -23,7 +23,11 @@ public class BioBuzzAuto0 extends LinearOpMode {
 
         // Run auto if stop was not pressed
         if (opModeIsActive()) {
+            // Drive forward 25in
             robot.drive(25, 0.60, .25);
+
+            // Drive right 50in
+            robot.strafe(50, 0.60, .25);
         }
     }
 }

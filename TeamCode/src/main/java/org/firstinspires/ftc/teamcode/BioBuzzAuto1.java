@@ -48,9 +48,8 @@ public class BioBuzzAuto1 extends LinearOpMode {
             // Drive backward 25in
             robot.drive(-25, 0.60, .25);
 
-            // Drive left 55in
-            // TODO: Check if this goes left or right
-            //robot.strafe(-55, 0.60, .25);
+            // Drive right 50in
+            robot.strafe(50, 0.60, .25);
         }
     }
 }
