@@ -26,33 +26,29 @@ public class BioBuzzAuto2 extends LinearOpMode {
 
         // Run Auto if stop was not pressed.
         if (opModeIsActive()){
+
+            //Wait 15 seconds
+            sleep(15000);
             // Start launcher
-            myLauncher.setPower(0.3);
-
+            myLauncher.setPower(0.6);
             // Warm up for half a second
-            sleep(500);
-
+            sleep(1000);
             // Start pusher
             myPusher.setPower(0.3);
-
             // Keep pusher running for 7.5 seconds
             sleep(7500);
-
             // Stop pusher
             myPusher.setPower(0.0);
-
             // Stop launcher
             myLauncher.setPower(0.0);
 
             // Drive backward 25in
             robot.drive(-25, 0.60, .25);
-
-            // Drive left 55in
-            // TODO: Check if this goes left or right
-            //robot.strafe(55, 0.60, .25);
-
+            // Drive left 50in
+            robot.strafe(-45, 0.60, .25);
             // Drive backward 50in
-            //robot.drive(-50, 0.60, .25);
+            robot.drive(-50, 0.60, .25);
+
         }
     }
 }
