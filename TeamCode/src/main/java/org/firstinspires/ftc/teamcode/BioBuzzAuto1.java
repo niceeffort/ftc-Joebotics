@@ -31,7 +31,7 @@ public class BioBuzzAuto1 extends LinearOpMode {
             myLauncher.setPower(0.6);
 
             // Warm up for half a second
-            sleep(500);
+            sleep(1000);
 
             // Start pusher
             myPusher.setPower(0.3);
